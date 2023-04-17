@@ -7,7 +7,7 @@ fn print_help(binary: &String) {
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    if args[1].eq("--help") {
+    if  args.len() == 2 && args[1].eq("--help") {
         print_help(&args[0]);
     }
     // dbg!(args);
