@@ -5,12 +5,14 @@
 // point
 //
 
-use std::ops::{Add, Sub, Mul, Div, AddAssign, SubAssign, MulAssign, DivAssign};
+use crate::vector::Vector;
+
+use std::ops::{Add};
 #[derive(Debug)]
 pub struct Point3D {
-    x: f64,
-    y: f64,
-    z: f64,
+    pub x: f64,
+    pub y: f64,
+    pub z: f64,
 }
 
 impl Point3D {
@@ -19,5 +21,16 @@ impl Point3D {
     }
     pub fn length_point(&self) -> f64 {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
+    }
+}
+
+impl Add<Vector> for Point3D {
+    type Output = Point3D;
+    fn add(self, other: Vector) -> Point3D {
+        Point3D {
+            x: self.x + other.x,
+            y: self.y + other.y,
+            z: self.z + other.z,
+        }
     }
 }

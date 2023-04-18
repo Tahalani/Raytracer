@@ -8,9 +8,9 @@
 use std::ops::{Add, Sub, Mul, Div, AddAssign, SubAssign, MulAssign, DivAssign};
 #[derive(Debug)]
 pub struct Vector {
-    x: f64,
-    y: f64,
-    z: f64,
+    pub x: f64,
+    pub y: f64,
+    pub z: f64,
 }
 
 impl Vector {
@@ -19,6 +19,9 @@ impl Vector {
     }
     pub fn length_vector(&self) -> f64 {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
+    }
+    pub fn dot_product(&self, other: Vector) -> f64 {
+        self.x * other.x + self.y * other.y + self.z * other.z
     }
 }
 
@@ -117,12 +120,5 @@ impl Div<f64> for Vector {
             y: self.y / other,
             z: self.z / other,
         }
-    }
-}
-
-impl Dot for Vector {
-    type Output = f64;
-    fn dot(self, other: Vector) -> f64 {
-        self.x * other.x + self.y * other.y + self.z * other.z
     }
 }
