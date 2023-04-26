@@ -6,7 +6,7 @@
 //
 
 use std::ops::{Add, Sub, Mul, Div, AddAssign, SubAssign, MulAssign, DivAssign};
-#[derive(Debug)]
+#[derive(Clone, Debug, Copy)]
 pub struct Vector {
     pub x: f64,
     pub y: f64,

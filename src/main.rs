@@ -29,11 +29,15 @@ fn main() {
     let _vector2 = vector::Vector::init_vector(3.0, 1.0, 8.0);
     let _point = point::Point3D::init_point(1.0, 2.0, 3.0);
     let _ray = ray::Ray::init_ray(_point, _vector);
+    let _sphere = sphere::Sphere::init_sphere(_point, 10.0);
+    let _hits = _sphere.hits(_ray);
+    println!("Hits: {}", _hits);
     // let _sphere = sphere::Sphere::init_sphere(_point, 10.0);
     // let _vector3 = _vector - _vector2;
-    let _point2 = _point + _vector;
+
+    // let _point2 = _point + _vector;
     // println!("Vector: {:?}", _vector3);
-    println!("Point: {:?}", _point2);
+    // println!("Point: {:?}", _point2);
     // let _length = _vector.length_vector();
     // println!("Length: {}", _length);
     // dbg!(args);

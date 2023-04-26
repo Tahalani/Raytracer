@@ -9,7 +9,7 @@ use crate::vector::Vector;
 
 use std::ops::{Add};
 
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 
 pub struct Point3D {
     pub x: f64,

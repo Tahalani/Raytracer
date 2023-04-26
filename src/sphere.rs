@@ -23,7 +23,7 @@ impl Sphere {
     }
     pub fn hits(&self, ray: Ray) -> bool {
         let oc = ray.origin - self.center;
-        let a = ray.direction.dot_product(ray.direction);
+        let a = ray.direction.clone().dot_product(ray.direction.clone());
         let b = 2.0 * oc.dot_product(ray.direction);
         let c = oc.dot_product(oc) - self.radius.powi(2);
         let discriminant = b.powi(2) - 4.0 * a * c;
