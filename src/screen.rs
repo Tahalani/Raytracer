@@ -8,8 +8,7 @@
 use crate::rectangle::Rectangle3D;
 use crate::camera;
 use crate::sphere;
-
-#[derive(Debug)]
+use crate::write_ppm::{write_pixel, create_file, RGB};
 
 pub struct Screen {
     rectangle: Rectangle3D,
@@ -22,17 +21,26 @@ impl Screen {
 
     pub fn display_screen(&self, _camera: camera::Camera, sphere: sphere::Sphere)
     {
+        let mut file = create_file(101, 101);
+
         for y in (0..=100).rev() {
             for x in 0..=100 {
                 let _ray = _camera.ray(x as f64 / 100.0, y as f64 / 100.0);
                 let _hits = sphere.hits(_ray);
                 if _hits {
-                    print!("O");
+                    write_pixel(&mut file, &RGB {
+                        r: 255,
+                        g: 0,
+                        b: 255,
+                    });
                 } else {
-                    print!(" ");
+                    write_pixel(&mut file, &RGB {
+                        r: 0,
+                        g: 0,
+                        b: 0,
+                    });
                 }
             }
-            println!("");
         }
     }
 }
