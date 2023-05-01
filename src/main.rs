@@ -12,6 +12,7 @@ mod sphere;
 mod rectangle;
 mod camera;
 mod screen;
+mod write_ppm;
 
 use std::process::exit;
 use std::env;

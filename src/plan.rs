@@ -13,8 +13,8 @@ use core::ops::Sub;
 #[derive(Debug)]
 
 pub struct Plan {
-    pub center: Point3D,
-    pub radius: f64,
+    pub axis:String,
+    pub pos:Int,
 }
 
 impl Plan {
@@ -22,6 +22,6 @@ impl Plan {
         Plan { center, radius }
     }
     pub fn hits(&self, ray: Ray) -> bool {
-        
+
     }
 }

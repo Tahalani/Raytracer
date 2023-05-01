@@ -27,7 +27,11 @@ impl Sphere {
         let b = 2.0 * oc.dot_product(ray.direction);
         let c = oc.dot_product(oc) - self.radius.powi(2);
         let discriminant = b.powi(2) - 4.0 * a * c;
-        discriminant > 0.0
+        if discriminant < 0.0 {
+            return false;
+        } else {
+            return true;
+        }
     }
 }
 
