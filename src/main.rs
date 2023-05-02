@@ -39,7 +39,7 @@ fn algo() {
     let sphere = sphere::Sphere::init_sphere(point_sphere, 0.1);
 
     let point_plan = point::Point3D::init_point(0.0, 0.0, 0.0);
-    let normal_plan = vector::Vector::init_vector(0.0, 1.0, 0.0);
+    let normal_plan = vector::Vector::init_vector(0.0, 0.0, 1.0);
     let plan = plan::Plan::init_Plan(normal_plan, point_plan);
 
     screen.display_screen(_camera, sphere, plan);

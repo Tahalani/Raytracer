@@ -18,7 +18,7 @@ pub struct Plan {
 
 impl Plan {
     pub fn init_Plan(normal : Vector, origin : Point3D) -> Plan {
-        Plan {normal, origin}
+        Plan { normal, origin }
     }
     pub fn hits(&self, ray: Ray) -> bool {
         let res = ray.direction.dot_product(self.normal);
@@ -27,8 +27,7 @@ impl Plan {
             return false;
         } else {
             let d = (self.origin - ray.origin).dot_product(self.normal) / res;
-            // println!("d = {}", d);
-            if d <= 0.0 {
+            if d < 0.0 {
                 return false;
             }
             return true;
@@ -39,3 +38,5 @@ impl Plan {
 // point d'intersection {
 //      p = l0 + l * d
 // }
+
+// point d'intersection = self.origin + self.direction * direction

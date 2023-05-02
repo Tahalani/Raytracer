@@ -31,10 +31,16 @@ impl Screen {
                 let _ray = _camera.ray(x as f64 / width as f64, y as f64 / height as f64);
                 let _hits = sphere.hits(_ray);
                 let _hits_plan = plan.hits(_ray);
-                if _hits || _hits_plan {
+                if _hits {
                     write_pixel(&mut file, &RGB {
                         r: 255,
                         g: 0,
+                        b: 255,
+                    });
+                } else if _hits_plan {
+                    write_pixel(&mut file, &RGB {
+                        r: 0,
+                        g: 255,
                         b: 255,
                     });
                 } else {
