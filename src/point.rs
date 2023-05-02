@@ -8,6 +8,7 @@
 use crate::vector::Vector;
 
 use std::ops::{Add};
+use std::ops::{Sub};
 
 #[derive(Clone, Copy, Debug)]
 
@@ -33,6 +34,17 @@ impl Add<Vector> for Point3D {
             x: self.x + other.x,
             y: self.y + other.y,
             z: self.z + other.z,
+        }
+    }
+}
+
+impl Sub<Vector> for Point3D {
+    type Output = Point3D;
+    fn sub(self, other: Vector) -> Point3D {
+        Point3D {
+            x: self.x - other.x,
+            y: self.y - other.y,
+            z: self.z - other.z,
         }
     }
 }
