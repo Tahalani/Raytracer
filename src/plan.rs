@@ -8,20 +8,35 @@
 use crate::point::Point3D;
 use crate::ray::Ray;
 use crate::vector::Vector;
-use core::ops::Sub;
 
 #[derive(Debug)]
 
 pub struct Plan {
-    pub axis:String,
-    pub pos:Int,
+    pub normal : Vector,
+    pub origin : Point3D,
 }
 
 impl Plan {
-    pub fn init_Plan(center: Point3D, radius: f64) -> Plan {
-        Plan { center, radius }
+    pub fn init_Plan(normal : Vector, origin : Point3D) -> Plan {
+        Plan { normal, origin }
     }
     pub fn hits(&self, ray: Ray) -> bool {
+        let res = ray.direction.dot_product(self.normal);
 
+        if res == 0.0 {
+            return false;
+        } else {
+            let d = (self.origin - ray.origin).dot_product(self.normal) / res;
+            if d < 0.0 {
+                return false;
+            }
+            return true;
+        }
     }
 }
+
+// point d'intersection {
+//      p = l0 + l * d
+// }
+
+// point d'intersection = self.origin + self.direction * direction
