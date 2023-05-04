@@ -31,12 +31,15 @@ impl Screen {
                 let _ray = _camera.ray(x as f64 / width as f64, y as f64 / height as f64);
                 let _hits = sphere.hits(_ray);
                 let _hits_plan = plan.hits(_ray);
+                sphere.coefficients = sphere.coefficients * 100.0;
+
                 if _hits {
                     write_pixel(&mut file, &RGB {
-                        r: 255,
-                        g: 0,
-                        b: 255,
+                        r: (sphere.coefficients as u32 * 255) / 100,
+                        g: (sphere.coefficients as u32 * 0) / 100,
+                        b: (sphere.coefficients as u32 * 255) / 100,
                     });
+
                 } else if _hits_plan {
                     write_pixel(&mut file, &RGB {
                         r: 0,
