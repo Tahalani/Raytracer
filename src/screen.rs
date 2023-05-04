@@ -20,7 +20,7 @@ impl Screen {
         Screen { rectangle }
     }
 
-    pub fn display_screen(&self, _camera: camera::Camera, sphere: sphere::Sphere, plan: plan::Plan)
+    pub fn display_screen(&self, _camera: camera::Camera, mut sphere: sphere::Sphere, plan: plan::Plan)
     {
         let width = 1000;
         let height = 1000;
