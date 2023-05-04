@@ -32,19 +32,17 @@ fn algo() {
 
     let screen = screen::Screen::init_screen(_rectangle);
 
-    let origin_cam = point::Point3D::init_point(0.0, 0.0, 0.0);
+    let origin_cam = point::Point3D::init_point(0.5, 0.5, 0.0);
     let _camera: camera::Camera = camera::Camera::init_camera(origin_cam, _rectangle);
 
     let point_sphere = point::Point3D::init_point(0.5, 0.5, 1.0);
     let point_intersection = point::Point3D::init_point(0.0, 0.0, 0.0);
     let sphere = sphere::Sphere::init_sphere(point_sphere, 0.1, point_intersection);
 
-    // println!("sphere: {:?}", sphere);
-
     let point_plan = point::Point3D::init_point(10.0, 0.0, 0.0);
     let normal_plan = vector::Vector::init_vector(-10.0, 0.0, 0.0);
     let plan = plan::Plan::init_Plan(normal_plan, point_plan);
-    // sphere.hits(ray);
+
     screen.display_screen(_camera, sphere, plan);
 }
 

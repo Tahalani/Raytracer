@@ -16,38 +16,54 @@ pub struct Sphere {
     pub center: Point3D,
     pub radius: f64,
     pub intersection_point: Point3D,
+    pub coefficients: f64,
 }
 
 impl Sphere {
     pub fn init_sphere (center: Point3D, radius: f64, intersection_point: Point3D) -> Sphere {
-        Sphere { center, radius, intersection_point}
+        Sphere { center, radius, intersection_point, coefficients: 0.0}
     }
-    pub fn hits(&mut self, ray: Ray) -> bool {
+
+    pub fn calcul_discriminant(&mut self, ray: Ray, a: &mut f64, mut b: &mut f64) -> f64 {
         let oc = ray.origin - self.center;
-        let a = ray.direction.clone().dot_product(ray.direction.clone());
-        let b = 2.0 * oc.dot_product(ray.direction);
+        *a = ray.direction.clone().dot_product(ray.direction.clone());
+        *b = (2.0 * oc.dot_product(ray.direction));
         let c = oc.dot_product(oc) - self.radius.powi(2);
-        let discriminant = b.powi(2) - 4.0 * a * c;
+        let discriminant = b.powi(2) - 4.0 * (*a) * c;
+        return discriminant;
+    }
+
+    pub fn normalize(&mut self, vector: Vector) -> Vector {
+        let lenght = (vector.x.powi(2) + vector.y.powi(2) + vector.z.powi(2)).sqrt();
+        let vector = Vector {
+            x: vector.x / lenght,
+            y: vector.y / lenght,
+            z: vector.z / lenght,
+        };
+        return vector;
+    }
+
+    pub fn calcul_normal(&mut self, ray: Ray, a: f64, b: f64, discriminant: f64) -> Vector {
         let solution = (-b + discriminant.sqrt()) / (2.0 * a);
-        let tmp = ray.origin + (ray.direction * solution);
-        let normal = tmp - self.center;
-        let lenght = (normal.x.powi(2) + normal.y.powi(2) + normal.z.powi(2)).sqrt();
-        let normal = Vector {
-            x: normal.x / lenght,
-            y: normal.y / lenght,
-            z: normal.z / lenght,
-        };
-        let length_ray = (ray.direction.x.powi(2) + ray.direction.y.powi(2) + ray.direction.z.powi(2)).sqrt();
-        let ray = Vector {
-            x: ray.direction.x / length_ray,
-            y: ray.direction.y / length_ray,
-            z: ray.direction.z / length_ray,
-        };
-        let coef = normal.dot_product(ray);
-        println!("coef: {}", coef);
-        // normal.dot_product(normal);
-        // println!("normal: {:?} et point {:?}", normal, self.intersection_point);
-        self.intersection_point = tmp;
+        self.intersection_point  = ray.origin + (ray.direction * solution);
+        let normal = self.intersection_point - self.center;
+        let normal = self.normalize(normal);
+        return normal;
+    }
+
+    pub fn calcul_coefficients(&mut self, ray: Ray, normal: Vector) -> f64 {
+        let ray = self.normalize(ray.direction);
+        let coefficients: f64 = normal.dot_product(ray);
+        return coefficients;
+    }
+
+    pub fn hits(&mut self, ray: Ray) -> bool {
+        let mut a = 0.0;
+        let mut b = 0.0;
+        let discriminant = self.calcul_discriminant(ray, &mut a, &mut b);
+        let normal = self.calcul_normal(ray, a, b, discriminant);
+        self.coefficients = self.calcul_coefficients(ray, normal);
+
         if discriminant < 0.0 {
             return false;
         } else {
