@@ -8,6 +8,7 @@
 use crate::point::Point3D;
 use crate::ray::Ray;
 use crate::vector::Vector;
+use crate::rgb::RGB;
 
 
 #[derive(Debug)]
@@ -18,11 +19,13 @@ pub struct Plan {
     pub intersection_point: Point3D,
     pub coefficients: f64,
     pub distance: f64,
+    pub rgb: RGB,
 }
 
 impl Plan {
     pub fn init_plan(normal : Vector, origin : Point3D) -> Plan {
-        Plan { normal, origin, intersection_point: Point3D::init_point(0.0, 0.0, 0.0), coefficients: 0.0, distance: 0.0 }
+        Plan { normal, origin, intersection_point: Point3D::init_point(0.0, 0.0, 0.0),
+        coefficients: 0.0, distance: 0.0, rgb: RGB::init_rgb(0, 255, 255)}
     }
 
     pub fn normalize(&mut self, vector: Vector) -> Vector {
@@ -49,6 +52,32 @@ impl Plan {
         return distance;
     }
 
+    pub fn calcul_rgb(&mut self) {
+
+        self.rgb.r = (255.0 / (self.distance as f64 / 250.0)) as u64;
+        self.rgb.g = (255.0 / (self.distance as f64 / 250.0)) as u64;
+        self.rgb.b = (255.0 / (self.distance as f64 / 250.0)) as u64;
+
+        if self.rgb.r > 255 {
+            self.rgb.r = 0;
+        }
+        if self.rgb.g > 255 {
+            self.rgb.g = 0;
+        }
+        if self.rgb.b > 255 {
+            self.rgb.b = 0;
+        }
+        if self.rgb.r == 0 {
+            self.rgb.r = 255;
+        }
+        if self.rgb.g == 0 {
+            self.rgb.g = 255;
+        }
+        if self.rgb.b == 0 {
+            self.rgb.b = 255;
+        }
+    }
+
     pub fn hits(&mut self, ray: Ray) -> bool {
         let product = ray.direction.dot_product(self.normal);
 
@@ -65,7 +94,10 @@ impl Plan {
             self.intersection_point = ray.origin + (ray.direction * d);
             let normal_normalize = self.normalize(self.normal);
             self.coefficients = self.calcul_coefficients(ray, normal_normalize);
-            self.distance = self.calcul_distance_between_point(ray);
+            self.distance = self.calcul_distance_between_point(ray) * 100.0;
+
+            self.calcul_rgb();
+
             return true;
         }
     }

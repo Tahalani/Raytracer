@@ -14,6 +14,7 @@ mod camera;
 mod screen;
 mod write_ppm;
 mod plan;
+mod rgb;
 
 use std::process::exit;
 use std::env;

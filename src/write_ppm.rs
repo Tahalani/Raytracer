@@ -7,12 +7,7 @@
 
 use std::fs::File;
 use std::io::Write;
-
-pub struct RGB {
-    pub r: u32,
-    pub g: u32,
-    pub b: u32,
-}
+use crate::rgb::RGB;
 
 pub fn create_file(width: u32, height: u32) -> File {
     let mut file = File::create("output.ppm").unwrap();

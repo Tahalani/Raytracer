@@ -9,6 +9,7 @@ use crate::point::Point3D;
 use crate::ray::Ray;
 use crate::vector::Vector;
 use core::ops::Sub;
+use crate::rgb::RGB;
 
 #[derive(Debug)]
 
@@ -17,11 +18,12 @@ pub struct Sphere {
     pub radius: f64,
     pub intersection_point: Point3D,
     pub coefficients: f64,
+    pub rgb: RGB,
 }
 
 impl Sphere {
     pub fn init_sphere (center: Point3D, radius: f64, intersection_point: Point3D) -> Sphere {
-        Sphere { center, radius, intersection_point, coefficients: 0.0}
+        Sphere { center, radius, intersection_point, coefficients: 0.0, rgb: RGB::init_rgb(255, 0, 255)}
     }
 
     pub fn calcul_discriminant(&mut self, ray: Ray, a: &mut f64, b: &mut f64) -> f64 {
@@ -57,16 +59,23 @@ impl Sphere {
         return coefficients;
     }
 
+    pub fn calcul_rgb (&mut self) {
+        self.rgb.r = (self.coefficients as u64 * 255) / 100;
+        self.rgb.g = (self.coefficients as u64 * 0) / 100;
+        self.rgb.b = (self.coefficients as u64 * 255) / 100;
+    }
+
     pub fn hits(&mut self, ray: Ray) -> bool {
         let mut a = 0.0;
         let mut b = 0.0;
         let discriminant = self.calcul_discriminant(ray, &mut a, &mut b);
         let normal = self.calcul_normal(ray, a, b, discriminant);
-        self.coefficients = self.calcul_coefficients(ray, normal);
+        self.coefficients = self.calcul_coefficients(ray, normal) * 100.0;
 
         if discriminant < 0.0 {
             return false;
         } else {
+            self.calcul_rgb();
             return true;
         }
     }
