@@ -36,22 +36,31 @@ impl Screen {
                 plan.coefficients = plan.coefficients * 100.0;
 
                 plan.distance = plan.distance * 100.0;
+                // println!("plan.distance: {}", (plan.distance as f64 / 400.0));
 
-                // println!("{}", (plan.distance));
 
-                let mut r = 255 * (1 - (plan.distance as u32 / 560));
-                let mut g = 255 * (1 - (plan.distance as u32 / 560));
-                let mut b = 255 * (1 - (plan.distance as u32 / 560));
-
-                // if r <= 0 || r >= 255{
-                //     r = 255;
-                // }
-                // if g <= 0 || g >= 255{
-                //     g = 255;
-                // }
-                // if b <= 0 || b >= 255{
-                //     b = 255;
-                // }
+                let mut r = (255.0 / (plan.distance as f64 / 250.0)) as u32;
+                let mut g = (255.0 / (plan.distance as f64 / 250.0)) as u32;
+                let mut b = (255.0 / (plan.distance as f64 / 250.0)) as u32;
+                
+                if r > 255 {
+                    r = 0;
+                }
+                if g > 255{
+                    g = 0;
+                }
+                if b > 255{
+                    b = 0;
+                }
+                if r == 0 {
+                    r = 255;
+                }
+                if g == 0{
+                    g = 255;
+                }
+                if b == 0{
+                    b = 255;
+                }
 
                 if _hits {
                     write_pixel(&mut file, &RGB {
