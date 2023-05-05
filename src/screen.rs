@@ -8,7 +8,8 @@
 use crate::rectangle::Rectangle3D;
 use crate::camera;
 use crate::sphere;
-use crate::write_ppm::{write_pixel, create_file, RGB};
+use crate::rgb::RGB;
+use crate::write_ppm::{write_pixel, create_file};
 use crate::plan;
 
 pub struct Screen {
@@ -20,7 +21,7 @@ impl Screen {
         Screen { rectangle }
     }
 
-    pub fn display_screen(&self, _camera: camera::Camera, mut sphere: sphere::Sphere, plan: plan::Plan)
+    pub fn display_screen(&self, _camera: camera::Camera, mut sphere: sphere::Sphere, mut plan: plan::Plan)
     {
         let width = 1000;
         let height = 1000;
@@ -29,22 +30,20 @@ impl Screen {
         for y in (0..=height).rev() {
             for x in 0..=width {
                 let _ray = _camera.ray(x as f64 / width as f64, y as f64 / height as f64);
-                let _hits = sphere.hits(_ray);
+                let _hits: bool = sphere.hits(_ray);
                 let _hits_plan = plan.hits(_ray);
-                sphere.coefficients = sphere.coefficients * 100.0;
 
                 if _hits {
                     write_pixel(&mut file, &RGB {
-                        r: (sphere.coefficients as u32 * 255) / 100,
-                        g: (sphere.coefficients as u32 * 0) / 100,
-                        b: (sphere.coefficients as u32 * 255) / 100,
-                    });
-
-                } else if _hits_plan {
+                        r: sphere.rgb.r,
+                        g: sphere.rgb.g,
+                        b: sphere.rgb.b,
+                });
+                } else if _hits_plan && plan.distance > 0.0 {
                     write_pixel(&mut file, &RGB {
-                        r: 0,
-                        g: 255,
-                        b: 255,
+                        r: plan.rgb.r,
+                        g: plan.rgb.g,
+                        b: plan.rgb.b,
                     });
                 } else {
                     write_pixel(&mut file, &RGB {

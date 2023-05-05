@@ -22,7 +22,7 @@ impl Camera {
     }
 
     pub fn ray(&self, u: f64, v: f64) -> Ray {
-        let screen_point = self.screen.pointAt(u, v);
+        let screen_point = self.screen.point_at(u, v);
         let direction = screen_point - self.origin;
         return Ray::init_ray(self.origin, direction);
     }
