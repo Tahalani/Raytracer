@@ -17,11 +17,12 @@ pub struct Plan {
     pub origin : Point3D,
     pub intersection_point: Point3D,
     pub coefficients: f64,
+    pub distance: f64,
 }
 
 impl Plan {
-    pub fn init_Plan(normal : Vector, origin : Point3D) -> Plan {
-        Plan { normal, origin, intersection_point: Point3D::init_point(0.0, 0.0, 0.0), coefficients: 0.0}
+    pub fn init_plan(normal : Vector, origin : Point3D) -> Plan {
+        Plan { normal, origin, intersection_point: Point3D::init_point(0.0, 0.0, 0.0), coefficients: 0.0, distance: 0.0 }
     }
 
     pub fn normalize(&mut self, vector: Vector) -> Vector {
@@ -40,6 +41,14 @@ impl Plan {
         return coefficients;
     }
 
+    pub fn calcul_distance_between_point(&mut self, ray: Ray) -> f64 {
+        let x = self.intersection_point.x - ray.origin.x;
+        let y = self.intersection_point.y - ray.origin.y;
+        let z = self.intersection_point.z - ray.origin.z;
+        let distance = (x.powi(2) + y.powi(2) + z.powi(2)).sqrt();
+        return distance;
+    }
+
     pub fn hits(&mut self, ray: Ray) -> bool {
         let product = ray.direction.dot_product(self.normal);
 
@@ -56,7 +65,8 @@ impl Plan {
             self.intersection_point = ray.origin + (ray.direction * d);
             let normal_normalize = self.normalize(self.normal);
             self.coefficients = self.calcul_coefficients(ray, normal_normalize);
-            println!("plan: {:?}", self.coefficients);
+            self.distance = self.calcul_distance_beetween_point(ray);
+            println!("distance: {}", self.distance);
             return true;
         }
     }

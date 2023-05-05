@@ -24,10 +24,10 @@ impl Sphere {
         Sphere { center, radius, intersection_point, coefficients: 0.0}
     }
 
-    pub fn calcul_discriminant(&mut self, ray: Ray, a: &mut f64, mut b: &mut f64) -> f64 {
+    pub fn calcul_discriminant(&mut self, ray: Ray, a: &mut f64, b: &mut f64) -> f64 {
         let oc = ray.origin - self.center;
         *a = ray.direction.clone().dot_product(ray.direction.clone());
-        *b = (2.0 * oc.dot_product(ray.direction));
+        *b = 2.0 * oc.dot_product(ray.direction);
         let c = oc.dot_product(oc) - self.radius.powi(2);
         let discriminant = b.powi(2) - 4.0 * (*a) * c;
         return discriminant;

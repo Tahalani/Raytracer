@@ -21,7 +21,7 @@ impl Rectangle3D {
         Rectangle3D { origin, bottom_side, left_side }
     }
 
-    pub fn pointAt(&self, u: f64, v: f64) -> Point3D {
+    pub fn point_at(&self, u: f64, v: f64) -> Point3D {
         self.origin + self.bottom_side * u + self.left_side * v
     }
 }

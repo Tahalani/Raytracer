@@ -32,8 +32,11 @@ impl Screen {
                 let _hits: bool = sphere.hits(_ray);
                 let _hits_plan = plan.hits(_ray);
 
+                // println!("sphere: {:?}", plan.coefficients);
                 sphere.coefficients = sphere.coefficients * 100.0;
                 plan.coefficients = plan.coefficients * 100.0;
+
+                // plan.distance = plan.distance * 100.0;
 
                 if _hits {
                     write_pixel(&mut file, &RGB {
@@ -43,13 +46,13 @@ impl Screen {
                 });
                 } else if _hits_plan {
                     write_pixel(&mut file, &RGB {
-                        r: (plan.coefficients as u32 * 0) / 100,
-                        g: (plan.coefficients as u32 * 255) / 100,
-                        b: (plan.coefficients as u32 * 255) / 100,
+                        // r: (plan.coefficients as u32 * 0) / 100,
+                        // g: (plan.coefficients as u32 * 255) / 100,
+                        // b: (plan.coefficients as u32 * 255) / 100,
 
-                        // r: 0,
-                        // g: 255,
-                        // b: 255,
+                        r: 0 * plan.distance as u32,
+                        g: 255 * plan.distance as u32,
+                        b: 255 * plan.distance as u32,
                     });
                 } else {
                     write_pixel(&mut file, &RGB {
