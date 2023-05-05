@@ -66,7 +66,6 @@ impl Plan {
             let normal_normalize = self.normalize(self.normal);
             self.coefficients = self.calcul_coefficients(ray, normal_normalize);
             self.distance = self.calcul_distance_between_point(ray);
-            println!("distance: {}", self.distance);
             return true;
         }
     }
