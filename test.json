@@ -1,0 +1,34 @@
+{
+    "personne1": {
+        "obj_t": "personne",
+        "name": "alice",
+        "age": 30,
+        "city": "paris"
+    },
+    "personne2": {
+        "obj_t": "personne",
+        "name": "kevin",
+        "age": 20,
+        "city": "lyon"
+    },
+    "sphere":  {
+        "obj_t": "sphere",
+        "sphere" : [
+            {
+            "name": "sphere1",
+            "rayon": 10,
+            "volume": 4188.79
+            },
+            {
+            "name": "sphere2",
+            "rayon": 20,
+            "volume": 33510.32
+            },
+            {
+            "name": "sphere3",
+            "rayon": 30,
+            "volume": 113097.34
+            }
+        ]
+    }
+  }
