@@ -5,11 +5,13 @@
 // camera
 //
 
+use serde::Deserialize;
+
 use crate::rectangle::Rectangle3D;
 use crate::point::Point3D;
 use crate::ray::Ray;
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Deserialize, Debug)]
 
 pub struct Camera {
     pub origin: Point3D,

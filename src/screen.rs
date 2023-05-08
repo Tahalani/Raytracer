@@ -5,6 +5,8 @@
 // screen
 //
 
+use serde::Deserialize;
+
 use crate::rectangle::Rectangle3D;
 use crate::camera;
 use crate::sphere;
@@ -12,8 +14,9 @@ use crate::rgb::RGB;
 use crate::write_ppm::{write_pixel, create_file};
 use crate::plan;
 
+#[derive(Deserialize, Debug)]
 pub struct Screen {
-    rectangle: Rectangle3D,
+    rectangle: Rectangle3D
 }
 
 impl Screen {

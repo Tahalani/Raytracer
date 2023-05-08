@@ -6,7 +6,9 @@
 //
 
 use std::ops::{Add, Sub, Mul, Div, AddAssign, SubAssign, MulAssign, DivAssign};
-#[derive(Clone, Debug, Copy)]
+
+use serde::Deserialize;
+#[derive(Clone, Debug, Copy, Deserialize)]
 pub struct Vector {
     pub x: f64,
     pub y: f64,
