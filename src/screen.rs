@@ -14,6 +14,8 @@ use crate::write_ppm::{write_pixel, create_file};
 use crate::plan;
 use crate::ray::Ray;
 use crate::vector::Vector;
+use crate::plan::Plan;
+use std::fs::File;
 
 pub struct Screen {
     rectangle: Rectangle3D,
@@ -30,24 +32,21 @@ impl Screen {
             rgb.r = (((((coefficients as u64 * r1) / 100) + 1) as f64 / (distance as f64 / 250.0)) + 1.0) as u64;
             rgb.g = (((((coefficients as u64 * g1) / 100) + 1) as f64 / (distance as f64 / 250.0)) + 1.0) as u64;
             rgb.b = (((((coefficients as u64 * b1) / 100) + 1) as f64 / (distance as f64 / 250.0)) + 1.0) as u64;
-            if rgb.r > 255 {
-                rgb.r = 0;
-            }
-            if rgb.g > 255 {
-                rgb.g = 0;
-            }
-            if rgb.b > 255 {
-                rgb.b = 0;
-            }
-            if rgb.r == 0 {
-                rgb.r = 255;
-            }
-            if rgb.g == 0 {
-                rgb.g = 255;
-            }
-            if rgb.b == 0 {
-                rgb.b = 255;
-            }
+            rgb.r = rgb.r.clamp(0, 255);
+            rgb.g = rgb.g.clamp(0, 255);
+            rgb.b = rgb.b.clamp(0, 255);
+        return rgb;
+    }
+
+    pub fn calcul_rgb_plan(&self, plan: &mut Plan, initial_rgb: RGB) -> RGB {
+
+        let mut rgb: RGB = RGB::init_rgb(0, 0, 0);
+        rgb.r = (255.0 / (plan.distance as f64 / 255.0 as f64)) as u64;
+        rgb.g = (255.0 / (plan.distance as f64 / 255.0 as f64)) as u64;
+        rgb.b = (255.0 / (plan.distance as f64 / 255.0 as f64)) as u64;
+        rgb.r = rgb.r.clamp(0, 255);
+        rgb.g = rgb.g.clamp(0, 255);
+        rgb.b = rgb.b.clamp(0, 255);
         return rgb;
     }
 
@@ -57,6 +56,23 @@ impl Screen {
         return coefficients * 100.0;
     }
 
+    pub fn render(&self, ray: Ray, file: &mut File, sphere: &mut sphere::Sphere, plan: &mut plan::Plan) {
+
+        let intersection_sphere: Option<Point3D> = sphere.hits(ray);
+        let intersection_plan: Option<Point3D> = plan.hits(ray);
+
+            if intersection_sphere != None {
+                let coefficient = self.calcul_coefficients(ray, sphere.normal);
+                sphere.rgb = self.calcul_rgb(coefficient, sphere.distance, sphere.inital_rgb.r, sphere.inital_rgb.g, sphere.inital_rgb.b);
+                write_pixel(file, &sphere.rgb);
+            } else if intersection_plan != None && plan.distance > 0.0 {
+                plan.rgb = self.calcul_rgb_plan(plan, plan.rgb);
+                write_pixel(file, &plan.rgb);
+            } else {
+                write_pixel(file, &RGB::init_rgb(0, 0, 0));
+            }
+    }
+
     pub fn display_screen(&self, _camera: camera::Camera, mut sphere: sphere::Sphere, mut plan: plan::Plan) {
         let width = 1000;
         let height = 1000;
@@ -64,31 +80,8 @@ impl Screen {
 
         for y in (0..=height).rev() {
             for x in 0..=width {
-                let _ray = _camera.ray(x as f64 / width as f64, y as f64 / height as f64);
-                let hits_sphere: Option<Point3D> = sphere.hits(_ray);
-                let _hits_plan = plan.hits(_ray);
-
-                if hits_sphere != None {
-                    let coefficient = self.calcul_coefficients(_ray, sphere.normal);
-                    sphere.rgb = self.calcul_rgb(coefficient, sphere.distance, sphere.inital_rgb.r, sphere.inital_rgb.g, sphere.inital_rgb.b);
-                    write_pixel(&mut file, &RGB {
-                        r: sphere.rgb.r,
-                        g: sphere.rgb.g,
-                        b: sphere.rgb.b,
-                });
-                } else if _hits_plan && plan.distance > 0.0 {
-                    write_pixel(&mut file, &RGB {
-                        r: plan.rgb.r,
-                        g: plan.rgb.g,
-                        b: plan.rgb.b,
-                    });
-                } else {
-                    write_pixel(&mut file, &RGB {
-                        r: 0,
-                        g: 0,
-                        b: 0,
-                    });
-                }
+                let ray = _camera.ray(x as f64 / width as f64, y as f64 / height as f64);
+                self.render(ray, &mut file, &mut sphere, &mut plan);
             }
         }
     }
