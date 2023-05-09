@@ -16,6 +16,7 @@ mod write_ppm;
 mod plan;
 mod rgb;
 mod heritage;
+mod light;
 
 use std::process::exit;
 use std::env;
@@ -45,7 +46,9 @@ fn algo() {
     let normal_plan = vector::Vector::init_vector(0.0, 1.0, 0.0);
     let plan = plan::Plan::init_plan(normal_plan, point_plan);
 
-    screen.display_screen(_camera, sphere, plan);
+    let cam_light = point::Point3D::init_point(-1.0, -1.0, 0.0);
+    let lights = vec![light::Light::init_light(cam_light, rgb::RGB::init_rgb(125, 125, 125), 255.0)];
+    screen.display_screen(_camera, sphere, plan, lights);
 }
 
 fn main() {

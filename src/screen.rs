@@ -6,16 +6,18 @@
 //
 
 use crate::point::Point3D;
-use crate::rectangle::Rectangle3D;
+// use crate::rectangle::Rectangle3D;
 use crate::camera;
 use crate::sphere;
 use crate::rgb::RGB;
+use crate::vector;
 use crate::write_ppm::{write_pixel, create_file};
 use crate::plan;
 use crate::heritage::HeritageHits;
 use crate::ray::Ray;
 use crate::vector::Vector;
 use crate::plan::Plan;
+use crate::light::Light;
 use std::fs::File;
 
 pub struct Screen {
@@ -30,9 +32,9 @@ impl Screen {
     pub fn calcul_rgb(&self, coefficients: f64, mut distance: f64, r1: u64, g1: u64, b1: u64) -> RGB {
         distance *= 100.0;
         let mut rgb: RGB = RGB::init_rgb(0, 0, 0);
-            rgb.r = (((((coefficients as u64 * r1) / 100) + 1) as f64 / (distance as f64 / 250.0)) + 1.0) as u64;
-            rgb.g = (((((coefficients as u64 * g1) / 100) + 1) as f64 / (distance as f64 / 250.0)) + 1.0) as u64;
-            rgb.b = (((((coefficients as u64 * b1) / 100) + 1) as f64 / (distance as f64 / 250.0)) + 1.0) as u64;
+            rgb.r = (((((coefficients as u64 * r1) / 100)) as f64 / (distance as f64 / 250.0)) + 1.0) as u64;
+            rgb.g = (((((coefficients as u64 * g1) / 100)) as f64 / (distance as f64 / 250.0)) + 1.0) as u64;
+            rgb.b = (((((coefficients as u64 * b1) / 100)) as f64 / (distance as f64 / 250.0)) + 1.0) as u64;
             rgb.r = rgb.r.clamp(0, 255);
             rgb.g = rgb.g.clamp(0, 255);
             rgb.b = rgb.b.clamp(0, 255);
@@ -57,13 +59,19 @@ impl Screen {
         return coefficients * 100.0;
     }
 
-    pub fn render(&self, ray: Ray, file: &mut File, sphere: &mut sphere::Sphere, plan: &mut plan::Plan) {
+    pub fn render(&self, ray: Ray, file: &mut File, sphere: &mut sphere::Sphere, plan: &mut plan::Plan, lights: Vec<Light>) {
 
         let intersection_sphere: Option<Point3D> = sphere.hits(ray);
         let intersection_plan: Option<Point3D> = plan.hits(ray);
 
             if intersection_sphere != None {
-                let coefficient = self.calcul_coefficients(ray, sphere.normal);
+                let light_ray = Ray::init_ray(lights[0].origine, vector::Vector::init_vector(lights[0].origine.x - intersection_sphere.unwrap().x, lights[0].origine.y - intersection_sphere.unwrap().y, lights[0].origine.z - intersection_sphere.unwrap().z));
+                // lights[0].ray.direction = lights[0].ray.direction.normalize(lights[0].ray.direction);
+                // println!("light_ray: {:?}", light_ray);
+                sphere.hits(light_ray);
+                // intersection_plan = sphere.hits(lights[0].ray);
+                let coefficient = self.calcul_coefficients(light_ray, sphere.normal);
+                // println!("coefficient: {}", coefficient);
                 sphere.rgb = self.calcul_rgb(coefficient, sphere.distance, sphere.inital_rgb.r, sphere.inital_rgb.g, sphere.inital_rgb.b);
                 write_pixel(file, &sphere.rgb);
             } else if intersection_plan != None && plan.distance > 0.0 {
@@ -74,7 +82,7 @@ impl Screen {
             }
     }
 
-    pub fn display_screen(&self, _camera: camera::Camera, mut sphere: sphere::Sphere, mut plan: plan::Plan) {
+    pub fn display_screen(&self, _camera: camera::Camera, mut sphere: sphere::Sphere, mut plan: plan::Plan, lights: Vec<Light>) {
         let width = 1000;
         let height = 1000;
         let mut file = create_file(width + 1, height + 1);
@@ -82,7 +90,7 @@ impl Screen {
         for y in (0..=height).rev() {
             for x in 0..=width {
                 let ray = _camera.ray(x as f64 / width as f64, y as f64 / height as f64);
-                self.render(ray, &mut file, &mut sphere, &mut plan);
+                self.render(ray, &mut file, &mut sphere, &mut plan, lights.clone());
             }
         }
     }
