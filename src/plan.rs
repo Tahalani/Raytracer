@@ -30,8 +30,8 @@ impl HeritageHits for Plan {
             return None;
         }
         self.intersection_point = ray.origin + (ray.direction * discriminant);
-            self.distance = self.calcul_distance_between_point(ray) * 100.0;
-            return Some(self.intersection_point);
+        self.distance = self.calcul_distance_between_point(ray) * 100.0;
+        return Some(self.intersection_point);
     }
 }
 

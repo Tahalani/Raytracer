@@ -32,7 +32,7 @@ fn algo() {
     let origin_rectangle = point::Point3D::init_point(0.0, 0.0, 1.0);
     let _rectangle = rectangle::Rectangle3D::init_rectangle(origin_rectangle, bottom_side, left_side);
 
-    let screen = screen::Screen::init_screen(_rectangle);
+    let screen = screen::Screen::init_screen();
 
     let origin_cam = point::Point3D::init_point(0.5, 0.5, 0.0);
     let _camera: camera::Camera = camera::Camera::init_camera(origin_cam, _rectangle);

@@ -19,12 +19,12 @@ use crate::plan::Plan;
 use std::fs::File;
 
 pub struct Screen {
-    rectangle: Rectangle3D,
+
 }
 
 impl Screen {
-    pub fn init_screen(rectangle: Rectangle3D) -> Screen {
-        Screen { rectangle }
+    pub fn init_screen() -> Screen {
+        Screen { }
     }
 
     pub fn calcul_rgb(&self, coefficients: f64, mut distance: f64, r1: u64, g1: u64, b1: u64) -> RGB {
