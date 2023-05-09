@@ -36,7 +36,7 @@ fn algo() {
     let origin_cam = point::Point3D::init_point(0.5, 0.5, 0.0);
     let _camera: camera::Camera = camera::Camera::init_camera(origin_cam, _rectangle);
 
-    let point_sphere = point::Point3D::init_point(0.5, 0.5, 1.0);
+    let point_sphere = point::Point3D::init_point(0.5, 0.5, 2.0);
     let point_intersection = point::Point3D::init_point(0.0, 0.0, 0.0);
     let sphere = sphere::Sphere::init_sphere(point_sphere, 0.2, point_intersection);
 
