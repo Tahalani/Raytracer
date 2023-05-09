@@ -33,7 +33,7 @@ impl HeritageHits for Sphere {
         let discriminant = self.calcul_discriminant(ray, &mut a, &mut b);
         self.normal = self.calcul_normal(ray, a, b, discriminant);
         self.distance = self.calcul_distance_between_point(ray);
-    
+
         if discriminant < 0.0 {
             return None;
         } else {
