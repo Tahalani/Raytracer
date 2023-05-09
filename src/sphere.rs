@@ -11,6 +11,7 @@ use crate::point::Point3D;
 use crate::ray::Ray;
 use crate::vector::Vector;
 use core::ops::Sub;
+use crate::heritage::HeritageHits;
 use crate::rgb::RGB;
 
 #[derive(Debug, Deserialize, Clone, Copy)]
@@ -19,13 +20,32 @@ pub struct Sphere {
     pub center: Point3D,
     pub radius: f64,
     pub intersection_point: Point3D,
-    pub coefficients: f64,
+    pub normal: Vector,
     pub rgb: RGB,
+    pub distance: f64,
+    pub inital_rgb: RGB,
+}
+
+impl HeritageHits for Sphere {
+    fn hits(&mut self, ray: Ray) -> Option<Point3D> {
+        let mut a = 0.0;
+        let mut b = 0.0;
+        let discriminant = self.calcul_discriminant(ray, &mut a, &mut b);
+        self.normal = self.calcul_normal(ray, a, b, discriminant);
+        self.distance = self.calcul_distance_between_point(ray);
+    
+        if discriminant < 0.0 {
+            return None;
+        } else {
+            return Some(self.intersection_point);
+        }
+    }
 }
 
 impl Sphere {
     pub fn init_sphere (center: Point3D, radius: f64, intersection_point: Point3D) -> Sphere {
-        Sphere { center, radius, intersection_point, coefficients: 0.0, rgb: RGB::init_rgb(255, 0, 255)}
+        Sphere { center, radius, intersection_point, rgb: RGB::init_rgb(255, 0, 255), normal: Vector::init_vector(0.0, 0.0, 0.0),
+            distance: 0.0, inital_rgb: RGB::init_rgb(255, 0, 255)}
     }
 
     pub fn calcul_discriminant(&mut self, ray: Ray, a: &mut f64, b: &mut f64) -> f64 {
@@ -37,49 +57,20 @@ impl Sphere {
         return discriminant;
     }
 
-    pub fn normalize(&mut self, vector: Vector) -> Vector {
-        let lenght = (vector.x.powi(2) + vector.y.powi(2) + vector.z.powi(2)).sqrt();
-        let vector = Vector {
-            x: vector.x / lenght,
-            y: vector.y / lenght,
-            z: vector.z / lenght,
-        };
-        return vector;
-    }
-
     pub fn calcul_normal(&mut self, ray: Ray, a: f64, b: f64, discriminant: f64) -> Vector {
         let solution = (-b + discriminant.sqrt()) / (2.0 * a);
         self.intersection_point  = ray.origin + (ray.direction * solution);
-        let normal = self.intersection_point - self.center;
-        let normal = self.normalize(normal);
+        let mut normal = self.intersection_point - self.center;
+        let normal = normal.normalize(normal);
         return normal;
     }
 
-    pub fn calcul_coefficients(&mut self, ray: Ray, normal: Vector) -> f64 {
-        let ray = self.normalize(ray.direction);
-        let coefficients: f64 = normal.dot_product(ray);
-        return coefficients;
-    }
-
-    pub fn calcul_rgb (&mut self) {
-        self.rgb.r = (self.coefficients as u64 * 255) / 100;
-        self.rgb.g = (self.coefficients as u64 * 0) / 100;
-        self.rgb.b = (self.coefficients as u64 * 255) / 100;
-    }
-
-    pub fn hits(&mut self, ray: Ray) -> bool {
-        let mut a = 0.0;
-        let mut b = 0.0;
-        let discriminant = self.calcul_discriminant(ray, &mut a, &mut b);
-        let normal = self.calcul_normal(ray, a, b, discriminant);
-        self.coefficients = self.calcul_coefficients(ray, normal) * 100.0;
-
-        if discriminant < 0.0 {
-            return false;
-        } else {
-            self.calcul_rgb();
-            return true;
-        }
+    pub fn calcul_distance_between_point(&mut self, ray: Ray) -> f64 {
+        let x = self.intersection_point.x - ray.origin.x;
+        let y = self.intersection_point.y - ray.origin.y;
+        let z = self.intersection_point.z - ray.origin.z;
+        let distance = (x.powi(2) + y.powi(2) + z.powi(2)).sqrt();
+        return distance;
     }
 }
 
