@@ -15,6 +15,7 @@ mod screen;
 mod write_ppm;
 mod plan;
 mod rgb;
+mod heritage;
 
 use std::process::exit;
 use std::env;

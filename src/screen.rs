@@ -12,6 +12,7 @@ use crate::sphere;
 use crate::rgb::RGB;
 use crate::write_ppm::{write_pixel, create_file};
 use crate::plan;
+use crate::heritage::HeritageHits;
 use crate::ray::Ray;
 use crate::vector::Vector;
 use crate::plan::Plan;

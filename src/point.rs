@@ -6,7 +6,6 @@
 //
 
 use crate::vector::Vector;
-use crate::ray::Ray;
 
 use std::ops::{Add};
 use std::ops::{Sub};

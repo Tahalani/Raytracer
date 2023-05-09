@@ -9,6 +9,7 @@ use crate::point::Point3D;
 use crate::ray::Ray;
 use crate::vector::Vector;
 use core::ops::Sub;
+use crate::heritage::HeritageHits;
 use crate::rgb::RGB;
 
 #[derive(Debug)]
@@ -21,6 +22,22 @@ pub struct Sphere {
     pub rgb: RGB,
     pub distance: f64,
     pub inital_rgb: RGB,
+}
+
+impl HeritageHits for Sphere {
+    fn hits(&mut self, ray: Ray) -> Option<Point3D> {
+        let mut a = 0.0;
+        let mut b = 0.0;
+        let discriminant = self.calcul_discriminant(ray, &mut a, &mut b);
+        self.normal = self.calcul_normal(ray, a, b, discriminant);
+        self.distance = self.calcul_distance_between_point(ray);
+    
+        if discriminant < 0.0 {
+            return None;
+        } else {
+            return Some(self.intersection_point);
+        }
+    }
 }
 
 impl Sphere {
@@ -52,20 +69,6 @@ impl Sphere {
         let z = self.intersection_point.z - ray.origin.z;
         let distance = (x.powi(2) + y.powi(2) + z.powi(2)).sqrt();
         return distance;
-    }
-
-    pub fn hits(&mut self, ray: Ray) -> Option<Point3D> {
-        let mut a = 0.0;
-        let mut b = 0.0;
-        let discriminant = self.calcul_discriminant(ray, &mut a, &mut b);
-        self.normal = self.calcul_normal(ray, a, b, discriminant);
-        self.distance = self.calcul_distance_between_point(ray);
-
-        if discriminant < 0.0 {
-            return None;
-        } else {
-            return Some(self.intersection_point);
-        }
     }
 }
 
