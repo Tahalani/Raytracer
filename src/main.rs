@@ -28,8 +28,8 @@ fn print_help(binary: &String) {
 fn algo() {
 
     let parsing = parsing::Parsing::init_parsing("test.json".to_string());
-    println!("{:?}", parsing);
 
+    // println!("{:?}", parsing.scene);
     // let bottom_side = vector::Vector::init_vector(1.0, 0.0, 0.0);
     // let left_side = vector::Vector::init_vector(0.0, 1.0, 0.0);
     // let origin_rectangle = point::Point3D::init_point(0.0, 0.0, 1.0);
@@ -37,7 +37,7 @@ fn algo() {
 
 
 
-    // let screen = screen::Screen::init_screen(_rectangle);
+    let screen = screen::Screen::init_screen(parsing.scene.camera.screen);
 
     // let origin_cam = point::Point3D::init_point(0.5, 0.5, 0.0);
     // let _camera: camera::Camera = camera::Camera::init_camera(origin_cam, _rectangle);
@@ -49,8 +49,7 @@ fn algo() {
     // let point_plan = point::Point3D::init_point(0.0, 0.0, 0.0);
     // let normal_plan = vector::Vector::init_vector(0.0, 1.0, 0.0);
     // let plan = plan::Plan::init_plan(normal_plan, point_plan);
-
-    // screen.display_screen(_camera, sphere, plan);
+    screen.display_screen(parsing.scene.camera, parsing.scene.sphere.unwrap()[0], parsing.scene.plan.unwrap()[0]);
 }
 
 fn main() {

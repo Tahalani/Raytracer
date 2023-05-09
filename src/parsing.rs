@@ -7,31 +7,34 @@
 
 use std::fs::File;
 use std::io::prelude::*;
-use serde_json::{Result};
-use serde::{Deserialize};
-use crate::{camera::Camera};
+use serde::Deserialize;
+use crate::camera::Camera;
+use crate::sphere::Sphere;
+use crate::plan::Plan;
 
 
 #[derive(Deserialize, Debug)]
-struct Scene {
-    camera: Camera,
+pub struct Scene {
+    pub camera: Camera,
+    pub sphere: Option<Vec<Sphere>>,
+    pub plan: Option<Vec<Plan>>,
 }
 
 pub struct Parsing {
-    pub name: String,
+    pub scene: Scene,
 }
 
 
 impl Parsing {
-    pub fn init_parsing(name: String) -> Result<()> {
+    pub fn init_parsing(name: String) -> Parsing {
 
         let mut file = File::open(name).unwrap();
         let mut contents = String::new();
         file.read_to_string(&mut contents).unwrap();
 
-        let data: Scene = serde_json::from_str(&contents)?;
-        println!("{:?}", data);
+        let data: Scene = serde_json::from_str(&contents).unwrap();
 
-        Ok(())
+
+        return Parsing {scene: data};
     }
 }

@@ -5,13 +5,15 @@
 // plan
 //
 
+use serde::Deserialize;
+
 use crate::point::Point3D;
 use crate::ray::Ray;
 use crate::vector::Vector;
 use crate::rgb::RGB;
 
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize, Clone, Copy)]
 
 pub struct Plan {
     pub normal : Vector,
