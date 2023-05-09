@@ -9,6 +9,8 @@ use crate::point::Point3D;
 use crate::rectangle::Rectangle3D;
 use crate::camera;
 use crate::sphere;
+use crate::cone;
+use crate::cylinder;
 use crate::rgb::RGB;
 use crate::write_ppm::{write_pixel, create_file};
 use crate::plan;
@@ -57,10 +59,12 @@ impl Screen {
         return coefficients * 100.0;
     }
 
-    pub fn render(&self, ray: Ray, file: &mut File, sphere: &mut sphere::Sphere, plan: &mut plan::Plan) {
+    pub fn render(&self, ray: Ray, file: &mut File, sphere: &mut sphere::Sphere, plan: &mut plan::Plan, cylinder: &mut cylinder::Cylinder, cone: &mut cone::Cone) {
 
         let intersection_sphere: Option<Point3D> = sphere.hits(ray);
         let intersection_plan: Option<Point3D> = plan.hits(ray);
+        let intersection_cylinder: Option<Point3D> = cylinder.hits(ray);
+        let intersection_cone: Option<Point3D> = cone.hits(ray);
 
             if intersection_sphere != None {
                 let coefficient = self.calcul_coefficients(ray, sphere.normal);
@@ -69,12 +73,20 @@ impl Screen {
             } else if intersection_plan != None && plan.distance > 0.0 {
                 plan.rgb = self.calcul_rgb_plan(plan, plan.rgb);
                 write_pixel(file, &plan.rgb);
+            } else if intersection_cone != None {
+                let coefficient = self.calcul_coefficients(ray, cone.normal);
+                cone.rgb = self.calcul_rgb(coefficient, cone.distance, cone.inital_rgb.r, cone.inital_rgb.g, cone.inital_rgb.b);
+                write_pixel(file, &cone.rgb);
+            } else if intersection_cylinder != None {
+                let coefficient = self.calcul_coefficients(ray, cylinder.normal);
+                cylinder.rgb = self.calcul_rgb(coefficient, cylinder.distance, cylinder.inital_rgb.r, cylinder.inital_rgb.g, cylinder.inital_rgb.b);
+                write_pixel(file, &cylinder.rgb);
             } else {
                 write_pixel(file, &RGB::init_rgb(0, 0, 0));
             }
     }
 
-    pub fn display_screen(&self, _camera: camera::Camera, mut sphere: sphere::Sphere, mut plan: plan::Plan) {
+    pub fn display_screen(&self, _camera: camera::Camera, mut sphere: sphere::Sphere, mut plan: plan::Plan, mut cylinder: cylinder::Cylinder, mut cone: cone::Cone) {
         let width = 1000;
         let height = 1000;
         let mut file = create_file(width + 1, height + 1);
@@ -82,7 +94,7 @@ impl Screen {
         for y in (0..=height).rev() {
             for x in 0..=width {
                 let ray = _camera.ray(x as f64 / width as f64, y as f64 / height as f64);
-                self.render(ray, &mut file, &mut sphere, &mut plan);
+                self.render(ray, &mut file, &mut sphere, &mut plan, &mut cylinder, &mut cone);
             }
         }
     }
