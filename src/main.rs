@@ -39,7 +39,7 @@ fn algo() {
     let origin_cam = point::Point3D::init_point(0.5, 0.5, 0.0);
     let _camera: camera::Camera = camera::Camera::init_camera(origin_cam, _rectangle);
 
-    let point_sphere = point::Point3D::init_point(0.5, 0.5, 2.0);
+    let point_sphere = point::Point3D::init_point(0.2, 0.2, 2.0);
     let point_intersection = point::Point3D::init_point(0.0, 0.0, 0.0);
     let sphere = sphere::Sphere::init_sphere(point_sphere, 0.2, point_intersection);
 
@@ -47,13 +47,16 @@ fn algo() {
     let normal_plan = vector::Vector::init_vector(0.0, 1.0, 0.0);
     let plan = plan::Plan::init_plan(normal_plan, point_plan);
 
-    let point_cylinder = point::Point3D::init_point(0.8, 0.8, 2.0);
+    let point_bottom_cylinder = point::Point3D::init_point(0.8, 0.8, 2.0);
+    let point_top_cylinder = point::Point3D::init_point(0.6, 0.6, 2.0);
     let point_intersection_cylinder = point::Point3D::init_point(0.0, 0.0, 0.0);
-    let cylinder = cylinder::Cylinder::init_cylinder(point_cylinder, 0.2, point_intersection_cylinder);
+    let cylinder = cylinder::Cylinder::init_cylinder(point_bottom_cylinder, point_top_cylinder, 0.2, point_intersection_cylinder);
 
-    let point_cone = point::Point3D::init_point(1.0, 1.0, 2.0);
+    let point_bottom_cone = point::Point3D::init_point(1.0, 0.0, 2.0);
+    let point_top_cone = point::Point3D::init_point(0.4, 0.4, 2.0);
     let point_intersection_cone = point::Point3D::init_point(0.0, 0.0, 0.0);
-    let cone = cone::Cone::init_cone(point_cone, 0.2, point_intersection_cone);
+    let cone = cone::Cone::init_cone(point_bottom_cone, point_top_cone, 0.2, point_intersection_cone);
+
     screen.display_screen(_camera, sphere, plan, cylinder, cone);
 }
 

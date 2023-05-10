@@ -33,6 +33,10 @@ impl Vector {
         };
         return vector;
     }
+    pub fn norm(&mut self) -> f64 {
+        let lenght = (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt();
+        return lenght;
+    }
 }
 
 impl Add for Vector {

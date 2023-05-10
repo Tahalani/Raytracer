@@ -6,11 +6,10 @@
 //
 
 use crate::point::Point3D;
-use crate::rectangle::Rectangle3D;
 use crate::camera;
 use crate::sphere;
-use crate::cone;
 use crate::cylinder;
+use crate::cone;
 use crate::rgb::RGB;
 use crate::write_ppm::{write_pixel, create_file};
 use crate::plan;
@@ -70,17 +69,17 @@ impl Screen {
                 let coefficient = self.calcul_coefficients(ray, sphere.normal);
                 sphere.rgb = self.calcul_rgb(coefficient, sphere.distance, sphere.inital_rgb.r, sphere.inital_rgb.g, sphere.inital_rgb.b);
                 write_pixel(file, &sphere.rgb);
-            } else if intersection_plan != None && plan.distance > 0.0 {
-                plan.rgb = self.calcul_rgb_plan(plan, plan.rgb);
-                write_pixel(file, &plan.rgb);
-            } else if intersection_cone != None {
-                let coefficient = self.calcul_coefficients(ray, cone.normal);
-                cone.rgb = self.calcul_rgb(coefficient, cone.distance, cone.inital_rgb.r, cone.inital_rgb.g, cone.inital_rgb.b);
-                write_pixel(file, &cone.rgb);
             } else if intersection_cylinder != None {
                 let coefficient = self.calcul_coefficients(ray, cylinder.normal);
                 cylinder.rgb = self.calcul_rgb(coefficient, cylinder.distance, cylinder.inital_rgb.r, cylinder.inital_rgb.g, cylinder.inital_rgb.b);
                 write_pixel(file, &cylinder.rgb);
+            } else if intersection_cone != None {
+                let coefficient = self.calcul_coefficients(ray, cone.normal);
+                cone.rgb = self.calcul_rgb(coefficient, cone.distance, cone.inital_rgb.r, cone.inital_rgb.g, cone.inital_rgb.b);
+                write_pixel(file, &cone.rgb);
+            } else if intersection_plan != None && plan.distance > 0.0 {
+                plan.rgb = self.calcul_rgb_plan(plan, plan.rgb);
+                write_pixel(file, &plan.rgb);
             } else {
                 write_pixel(file, &RGB::init_rgb(0, 0, 0));
             }
