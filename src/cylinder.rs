@@ -22,6 +22,7 @@ pub struct Cylinder {
     pub rgb: RGB,
     pub distance: f64,
     pub inital_rgb: RGB,
+    pub hauteur: Vector,
 }
 
 impl HeritageHits for Cylinder {
@@ -43,10 +44,11 @@ impl HeritageHits for Cylinder {
 impl Cylinder {
     pub fn init_cylinder(center_top: Point3D, center_bottom: Point3D, radius: f64, intersection_point: Point3D) -> Cylinder {
         Cylinder { center_top, center_bottom, radius, intersection_point, rgb: RGB::init_rgb(255, 0, 255), normal: Vector::init_vector(0.0, 0.0, 0.0),
-            distance: 0.0, inital_rgb: RGB::init_rgb(255, 0, 255)}
+            distance: 0.0, inital_rgb: RGB::init_rgb(255, 0, 255), hauteur: Vector::init_vector(0.0, 0.0, 0.0)}
     }
     pub fn calcul_discriminant(&mut self, ray: Ray, a: &mut f64, b: &mut f64) -> f64 {
         let oc = ray.origin - self.center_bottom;
+        self.hauteur = ray.origin - self.center_bottom;
         let h = (self.center_top - self.center_bottom) / (self.center_top - self.center_bottom).norm();
         *a = (ray.direction.clone().dot_product(ray.direction.clone())) - ((ray.direction.clone().dot_product(h.clone())).powi(2));
         *b = 2.0 * (ray.direction.clone().dot_product(oc.clone()) - (ray.direction.clone().dot_product(h.clone()) * oc.clone().dot_product(h.clone())));

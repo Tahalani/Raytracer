@@ -69,11 +69,11 @@ impl Screen {
                 let coefficient = self.calcul_coefficients(ray, sphere.normal);
                 sphere.rgb = self.calcul_rgb(coefficient, sphere.distance, sphere.inital_rgb.r, sphere.inital_rgb.g, sphere.inital_rgb.b);
                 write_pixel(file, &sphere.rgb);
-            } else if intersection_cylinder != None {
+            } else if intersection_cylinder != None && (intersection_cylinder.unwrap() - cylinder.center_bottom).dot_product(cylinder.hauteur) < cylinder.hauteur.norm() {
                 let coefficient = self.calcul_coefficients(ray, cylinder.normal);
                 cylinder.rgb = self.calcul_rgb(coefficient, cylinder.distance, cylinder.inital_rgb.r, cylinder.inital_rgb.g, cylinder.inital_rgb.b);
                 write_pixel(file, &cylinder.rgb);
-            } else if intersection_cone != None {
+            } else if intersection_cone != None && (intersection_cone.unwrap() - cone.center_top).dot_product(cone.hauteur) < cone.oc.norm() {
                 let coefficient = self.calcul_coefficients(ray, cone.normal);
                 cone.rgb = self.calcul_rgb(coefficient, cone.distance, cone.inital_rgb.r, cone.inital_rgb.g, cone.inital_rgb.b);
                 write_pixel(file, &cone.rgb);

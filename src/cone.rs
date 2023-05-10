@@ -22,6 +22,8 @@ pub struct Cone {
     pub rgb: RGB,
     pub distance: f64,
     pub inital_rgb: RGB,
+    pub hauteur: Vector,
+    pub oc: Vector,
 }
 
 impl HeritageHits for Cone {
@@ -43,13 +45,15 @@ impl HeritageHits for Cone {
 impl Cone {
     pub fn init_cone(center_top: Point3D, center_bottom: Point3D, radius: f64, intersection_point: Point3D) -> Cone {
         Cone { center_top, center_bottom, radius, intersection_point, rgb: RGB::init_rgb(255, 0, 255), normal: Vector::init_vector(0.0, 0.0, 0.0),
-            distance: 0.0, inital_rgb: RGB::init_rgb(255, 0, 255)}
+            distance: 0.0, inital_rgb: RGB::init_rgb(255, 0, 255), hauteur: Vector::init_vector(0.0, 0.0, 0.0), oc: Vector::init_vector(0.0, 0.0, 0.0)}
     }
     pub fn calcul_discriminant(&mut self, ray: Ray, a: &mut f64, b: &mut f64) -> f64 {
         let oc = ray.origin - self.center_bottom;
         let mut hauteur = self.center_bottom - self.center_top;
+        self.oc = self.center_bottom - self.center_top;
         let m = self.radius.powi(2) / hauteur.norm().powi(2);
         let h = (self.center_top - self.center_bottom) / (self.center_top - self.center_bottom).norm();
+        self.hauteur = (self.center_top - self.center_bottom) / (self.center_top - self.center_bottom).norm();
         *a = (ray.direction.clone().dot_product(ray.direction.clone())) - (m * (ray.direction.clone().dot_product(h.clone())).powi(2)) - (ray.direction.clone().dot_product(h.clone())).powi(2);
         *b = 2.0 * (ray.direction.clone().dot_product(oc.clone()) - (m * (ray.direction.clone().dot_product(h.clone())) * (oc.clone().dot_product(h.clone())))) - (ray.direction.clone().dot_product(h.clone())) * (oc.clone().dot_product(h.clone()));
         let c = (oc.clone().dot_product(oc.clone())) - (m * (oc.clone().dot_product(h.clone())).powi(2)) - (oc.clone().dot_product(h.clone())).powi(2);
