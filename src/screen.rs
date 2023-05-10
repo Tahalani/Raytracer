@@ -32,6 +32,9 @@ impl Screen {
     pub fn calcul_rgb(&self, coefficients: f64, mut distance: f64, r1: u64, g1: u64, b1: u64) -> RGB {
         distance *= 100.0;
         let mut rgb: RGB = RGB::init_rgb(0, 0, 0);
+        // rgb.g = (((g1 / (coefficients as u64  + 1)) * 100)) as u64;
+        // rgb.r = (((r1 / (coefficients as u64  + 1)) * 100)) as u64;
+        // rgb.b = (((b1 / (coefficients as u64  + 1)) * 100)) as u64;
             rgb.r = (((((coefficients as u64 * r1) / 100)) as f64 / (distance as f64 / 250.0)) + 1.0) as u64;
             rgb.g = (((((coefficients as u64 * g1) / 100)) as f64 / (distance as f64 / 250.0)) + 1.0) as u64;
             rgb.b = (((((coefficients as u64 * b1) / 100)) as f64 / (distance as f64 / 250.0)) + 1.0) as u64;
@@ -64,17 +67,13 @@ impl Screen {
         let intersection_sphere: Option<Point3D> = sphere.hits(ray);
         let intersection_plan: Option<Point3D> = plan.hits(ray);
 
-            if intersection_sphere != None {
-                let light_ray = Ray::init_ray(lights[0].origine, vector::Vector::init_vector(lights[0].origine.x - intersection_sphere.unwrap().x, lights[0].origine.y - intersection_sphere.unwrap().y, lights[0].origine.z - intersection_sphere.unwrap().z));
-                // lights[0].ray.direction = lights[0].ray.direction.normalize(lights[0].ray.direction);
-                // println!("light_ray: {:?}", light_ray);
-                sphere.hits(light_ray);
-                // intersection_plan = sphere.hits(lights[0].ray);
+            if !intersection_sphere.is_none() {
+                let light_ray = Ray::init_ray(lights[0].origine, sphere.intersection_point.vectorize(lights[0].origine));
                 let coefficient = self.calcul_coefficients(light_ray, sphere.normal);
-                // println!("coefficient: {}", coefficient);
                 sphere.rgb = self.calcul_rgb(coefficient, sphere.distance, sphere.inital_rgb.r, sphere.inital_rgb.g, sphere.inital_rgb.b);
                 write_pixel(file, &sphere.rgb);
-            } else if intersection_plan != None && plan.distance > 0.0 {
+            } else if !intersection_plan.is_none() && plan.distance > 0.0 {
+                let light_ray = Ray::init_ray(lights[0].origine, plan.intersection_point.vectorize(lights[0].origine));
                 plan.rgb = self.calcul_rgb_plan(plan, plan.rgb);
                 write_pixel(file, &plan.rgb);
             } else {

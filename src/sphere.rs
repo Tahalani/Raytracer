@@ -56,8 +56,18 @@ impl Sphere {
     }
 
     pub fn calcul_normal(&mut self, ray: Ray, a: f64, b: f64, discriminant: f64) -> Vector {
-        let solution = (-b + discriminant.sqrt()) / (2.0 * a);
-        self.intersection_point  = ray.origin + (ray.direction * solution);
+        if discriminant == 0.0 {
+            self.intersection_point  = ray.origin + (ray.direction * (-b / (2.0 * a)));
+        } else {
+            let solution1 = (-b + discriminant.sqrt()) / (2.0 * a);
+            let solution2 = (-b - discriminant.sqrt()) / (2.0 * a);
+            if solution1 < solution2 {
+                self.intersection_point  = ray.origin + (ray.direction * solution1);
+            } else {
+                self.intersection_point  = ray.origin + (ray.direction * solution2);
+            }
+        }
+        // self.intersection_point  = ray.origin + (ray.direction * solution);
         let mut normal = self.intersection_point - self.center;
         let normal = normal.normalize(normal);
         return normal;

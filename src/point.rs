@@ -25,6 +25,13 @@ impl Point3D {
     pub fn length_point(&self) -> f64 {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
     }
+    pub fn vectorize(&self, other: Point3D) -> Vector {
+        Vector {
+            x: other.x - self.x,
+            y: other.y - self.y,
+            z: other.z - self.z,
+        }
+    }
 }
 
 impl Add<Vector> for Point3D {

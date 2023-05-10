@@ -23,6 +23,11 @@ impl Vector {
     pub fn dot_product(&self, other: Vector) -> f64 {
         self.x * other.x + self.y * other.y + self.z * other.z
     }
+    pub fn reverse(&mut self) {
+        self.x = -self.x;
+        self.y = -self.y;
+        self.z = -self.z;
+    }
 
     pub fn normalize(&mut self, vector: Vector) -> Vector {
         let lenght = (vector.x.powi(2) + vector.y.powi(2) + vector.z.powi(2)).sqrt();
