@@ -47,9 +47,9 @@ impl Screen {
     pub fn calcul_rgb_plan(&self, plan: &mut Plan, initial_rgb: RGB) -> RGB {
 
         let mut rgb: RGB = RGB::init_rgb(0, 0, 0);
-        rgb.r = (255.0 / (plan.distance as f64 / 255.0 as f64)) as u64;
-        rgb.g = (255.0 / (plan.distance as f64 / 255.0 as f64)) as u64;
-        rgb.b = (255.0 / (plan.distance as f64 / 255.0 as f64)) as u64;
+        rgb.r = (initial_rgb.r as f64 / (plan.distance as f64 / 255.0 as f64)) as u64;
+        rgb.g = (initial_rgb.g as f64 / (plan.distance as f64 / 255.0 as f64)) as u64;
+        rgb.b = (initial_rgb.b as f64 / (plan.distance as f64 / 255.0 as f64)) as u64;
         rgb.r = rgb.r.clamp(0, 255);
         rgb.g = rgb.g.clamp(0, 255);
         rgb.b = rgb.b.clamp(0, 255);
@@ -74,7 +74,8 @@ impl Screen {
                 write_pixel(file, &sphere.rgb);
             } else if !intersection_plan.is_none() && plan.distance > 0.0 {
                 let light_ray = Ray::init_ray(lights[0].origine, plan.intersection_point.vectorize(lights[0].origine));
-                plan.rgb = self.calcul_rgb_plan(plan, plan.rgb);
+                plan.hits(light_ray);
+                plan.rgb = self.calcul_rgb_plan(plan, plan.inital_rgb);
                 write_pixel(file, &plan.rgb);
             } else {
                 write_pixel(file, &RGB::init_rgb(0, 0, 0));

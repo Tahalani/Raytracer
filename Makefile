@@ -11,9 +11,7 @@ NAME		=	raytracer
 
 CC			=	cargo build --release
 
-all: $(NAME)
-
-$(NAME): $(OBJ) $(OBJ_M)
+all:
 	$(CC)
 	cp target/release/$(NAME) .
 

@@ -20,6 +20,7 @@ pub struct Plan {
     pub coefficients: f64,
     pub distance: f64,
     pub rgb: RGB,
+    pub inital_rgb: RGB,
 }
 
 impl HeritageHits for Plan {
@@ -40,7 +41,7 @@ impl HeritageHits for Plan {
 impl Plan {
     pub fn init_plan(normal : Vector, origin : Point3D) -> Plan {
         Plan { normal, origin, intersection_point: Point3D::init_point(0.0, 0.0, 0.0),
-        coefficients: 0.0, distance: 0.0, rgb: RGB::init_rgb(255, 255, 255)}
+        coefficients: 0.0, distance: 0.0, rgb: RGB::init_rgb(255, 255, 255), inital_rgb: RGB::init_rgb(255, 255, 255)}
     }
     pub fn calcul_distance_between_point(&mut self, ray: Ray) -> f64 {
         let x = self.intersection_point.x - ray.origin.x;
