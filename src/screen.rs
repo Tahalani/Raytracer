@@ -74,7 +74,7 @@ impl Screen {
                 write_pixel(file, &sphere.rgb);
             } else if !intersection_plan.is_none() && plan.distance > 0.0 {
                 let light_ray = Ray::init_ray(lights[0].origine, plan.intersection_point.vectorize(lights[0].origine));
-                plan.hits(light_ray);
+                plan.distance = plan.calcul_distance_between_point(ray) * 100.0;
                 plan.rgb = self.calcul_rgb_plan(plan, plan.inital_rgb);
                 write_pixel(file, &plan.rgb);
             } else {
