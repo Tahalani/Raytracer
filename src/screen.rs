@@ -42,8 +42,9 @@ impl Screen {
     }
 
     pub fn calcul_coefficients(&self, ray: Ray, mut normal: Vector) -> f64 {
-        let ray = normal.normalize(ray.direction);
-        let coefficients: f64 = normal.dot_product(ray);
+        let mut tmp_ray = ray.direction;
+        tmp_ray.normalize();
+        let coefficients: f64 = normal.dot_product(tmp_ray);
         return coefficients * 100.0;
     }
 
@@ -52,12 +53,12 @@ impl Screen {
         let intersection_sphere: Option<Point3D> = sphere.hits(ray);
         let intersection_plan: Option<Point3D> = plan.hits(ray);
 
-            if !intersection_sphere.is_none() {
+            if intersection_sphere != None {
                 let light_ray = Ray::init_ray(lights[0].origine, sphere.intersection_point.vectorize(lights[0].origine));
                 let coefficient = self.calcul_coefficients(light_ray, sphere.normal);
                 sphere.rgb = self.calcul_pixel_color(sphere.inital_rgb, coefficient, sphere.distance * 100.0);
                 write_pixel(file, &sphere.rgb);
-            } else if !intersection_plan.is_none() && plan.distance > 0.0 {
+            } else if intersection_plan != None && plan.distance > 0.0 {
                 let light_ray = Ray::init_ray(lights[0].origine, plan.intersection_point.vectorize(lights[0].origine));
                 let coefficient = self.calcul_coefficients(light_ray, plan.normal);
                 plan.rgb = self.calcul_pixel_color(plan.inital_rgb, coefficient, plan.distance);

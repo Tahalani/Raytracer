@@ -29,14 +29,11 @@ impl Vector {
         self.z = -self.z;
     }
 
-    pub fn normalize(&mut self, vector: Vector) -> Vector {
-        let lenght = (vector.x.powi(2) + vector.y.powi(2) + vector.z.powi(2)).sqrt();
-        let vector = Vector {
-            x: vector.x / lenght,
-            y: vector.y / lenght,
-            z: vector.z / lenght,
-        };
-        return vector;
+    pub fn normalize(&mut self) {
+        let lenght = (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt();
+            self.x /= lenght;
+            self.y /= lenght;
+            self.z /= lenght;
     }
 }
 

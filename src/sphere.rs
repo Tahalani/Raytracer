@@ -69,7 +69,7 @@ impl Sphere {
         }
         // self.intersection_point  = ray.origin + (ray.direction * solution);
         let mut normal = self.intersection_point - self.center;
-        let normal = normal.normalize(normal);
+        normal.normalize();
         return normal;
     }
 
