@@ -46,7 +46,7 @@ fn algo() {
     let normal_plan = vector::Vector::init_vector(0.0, 1.0, 0.0);
     let plan = plan::Plan::init_plan(normal_plan, point_plan);
 
-    let cam_light = point::Point3D::init_point(1.0, 1.0, 2.0);
+    let cam_light = point::Point3D::init_point(1.0, 1.0, 0.0);
     let lights = vec![light::Light::init_light(cam_light, rgb::RGB::init_rgb(125, 125, 125), 255.0)];
     screen.display_screen(_camera, sphere, plan, lights);
 }

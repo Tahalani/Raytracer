@@ -25,10 +25,8 @@ pub struct Plan {
 
 impl HeritageHits for Plan {
     fn hits(&mut self, ray: Ray) -> Option<Point3D> {
-        // println!("ray.originavant: {:?}", ray.origin);
         let product = ray.direction.dot_product(self.normal);
         let discriminant = (self.origin - ray.origin).dot_product(self.normal) / product;
-        // println!("ray.originapres: {:?}", ray.origin);
         self.intersection_point = ray.origin + (ray.direction * discriminant);
         self.distance = self.calcul_distance_between_point(ray) * 100.0;
         if discriminant < 0.0 {

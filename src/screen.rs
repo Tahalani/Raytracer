@@ -29,27 +29,12 @@ impl Screen {
         Screen { }
     }
 
-    pub fn calcul_rgb(&self, coefficients: f64, mut distance: f64, r1: u64, g1: u64, b1: u64) -> RGB {
-        distance *= 100.0;
-        let mut rgb: RGB = RGB::init_rgb(0, 0, 0);
-        // rgb.g = (((g1 / (coefficients as u64  + 1)) * 100)) as u64;
-        // rgb.r = (((r1 / (coefficients as u64  + 1)) * 100)) as u64;
-        // rgb.b = (((b1 / (coefficients as u64  + 1)) * 100)) as u64;
-            rgb.r = (((((coefficients as u64 * r1) / 100)) as f64 / (distance as f64 / 250.0)) + 1.0) as u64;
-            rgb.g = (((((coefficients as u64 * g1) / 100)) as f64 / (distance as f64 / 250.0)) + 1.0) as u64;
-            rgb.b = (((((coefficients as u64 * b1) / 100)) as f64 / (distance as f64 / 250.0)) + 1.0) as u64;
-            rgb.r = rgb.r.clamp(0, 255);
-            rgb.g = rgb.g.clamp(0, 255);
-            rgb.b = rgb.b.clamp(0, 255);
-        return rgb;
-    }
-
-    pub fn calcul_rgb_plan(&self, plan: &mut Plan, initial_rgb: RGB) -> RGB {
+    pub fn calcul_pixel_color(&self, shape_color: RGB, coefficients: f64, distance: f64) -> RGB {
 
         let mut rgb: RGB = RGB::init_rgb(0, 0, 0);
-        rgb.r = (initial_rgb.r as f64 / (plan.distance as f64 / 255.0 as f64)) as u64;
-        rgb.g = (initial_rgb.g as f64 / (plan.distance as f64 / 255.0 as f64)) as u64;
-        rgb.b = (initial_rgb.b as f64 / (plan.distance as f64 / 255.0 as f64)) as u64;
+        rgb.r = (((shape_color.r as f64 * coefficients) as u64 / 100) as f64 / (distance as f64 / 255.0 as f64)) as u64;
+        rgb.g = (((shape_color.g as f64 * coefficients) as u64 / 100) as f64 / (distance as f64 / 255.0 as f64)) as u64;
+        rgb.b = (((shape_color.b as f64 * coefficients) as u64 / 100) as f64 / (distance as f64 / 255.0 as f64)) as u64;
         rgb.r = rgb.r.clamp(0, 255);
         rgb.g = rgb.g.clamp(0, 255);
         rgb.b = rgb.b.clamp(0, 255);
@@ -70,12 +55,12 @@ impl Screen {
             if !intersection_sphere.is_none() {
                 let light_ray = Ray::init_ray(lights[0].origine, sphere.intersection_point.vectorize(lights[0].origine));
                 let coefficient = self.calcul_coefficients(light_ray, sphere.normal);
-                sphere.rgb = self.calcul_rgb(coefficient, sphere.distance, sphere.inital_rgb.r, sphere.inital_rgb.g, sphere.inital_rgb.b);
+                sphere.rgb = self.calcul_pixel_color(sphere.inital_rgb, coefficient, sphere.distance * 100.0);
                 write_pixel(file, &sphere.rgb);
             } else if !intersection_plan.is_none() && plan.distance > 0.0 {
                 let light_ray = Ray::init_ray(lights[0].origine, plan.intersection_point.vectorize(lights[0].origine));
-                plan.distance = plan.calcul_distance_between_point(ray) * 100.0;
-                plan.rgb = self.calcul_rgb_plan(plan, plan.inital_rgb);
+                let coefficient = self.calcul_coefficients(light_ray, plan.normal);
+                plan.rgb = self.calcul_pixel_color(plan.inital_rgb, coefficient, plan.distance);
                 write_pixel(file, &plan.rgb);
             } else {
                 write_pixel(file, &RGB::init_rgb(0, 0, 0));
