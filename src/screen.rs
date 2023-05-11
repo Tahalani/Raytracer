@@ -5,6 +5,7 @@
 // screen
 //
 
+use serde::Deserialize;
 use crate::point::Point3D;
 // use crate::rectangle::Rectangle3D;
 use crate::camera;
@@ -20,6 +21,7 @@ use crate::plan::Plan;
 use crate::light::Light;
 use std::fs::File;
 
+#[derive(Deserialize, Debug)]
 pub struct Screen {
 
 }

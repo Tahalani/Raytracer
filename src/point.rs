@@ -5,12 +5,14 @@
 // point
 //
 
+use serde::Deserialize;
+
 use crate::vector::Vector;
 
 use std::ops::{Add};
 use std::ops::{Sub};
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Deserialize, Debug, PartialEq)]
 
 pub struct Point3D {
     pub x: f64,

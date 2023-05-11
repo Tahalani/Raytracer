@@ -11,3 +11,5 @@ use crate::point::Point3D;
 pub trait HeritageHits {
     fn hits(&mut self, ray: Ray) -> Option<Point3D>;
 }
+
+//vector de box

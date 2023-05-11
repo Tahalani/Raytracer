@@ -5,10 +5,12 @@
 // rectangle
 //
 
+use serde::Deserialize;
+
 use crate::vector::Vector;
 use crate::point::Point3D;
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Deserialize, Debug)]
 
 pub struct Rectangle3D {
     pub origin: Point3D,

@@ -17,6 +17,7 @@ mod plan;
 mod rgb;
 mod heritage;
 mod light;
+mod parsing;
 
 use std::process::exit;
 use std::env;
@@ -27,6 +28,12 @@ fn print_help(binary: &String) {
 }
 
 fn algo() {
+
+    // let parsing = parsing::Parsing::init_parsing("test.json".to_string());
+
+    // let screen = screen::Screen::init_screen();
+
+    // screen.display_screen(parsing.scene.camera, parsing.scene.sphere.unwrap()[0], parsing.scene.plan.unwrap()[0]);
 
     let bottom_side = vector::Vector::init_vector(1.0, 0.0, 0.0);
     let left_side = vector::Vector::init_vector(0.0, 1.0, 0.0);

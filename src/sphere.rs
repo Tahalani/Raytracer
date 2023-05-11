@@ -5,6 +5,8 @@
 // sphere
 //
 
+use serde::Deserialize;
+
 use crate::point::Point3D;
 use crate::ray::Ray;
 use crate::vector::Vector;
@@ -12,7 +14,7 @@ use core::ops::Sub;
 use crate::heritage::HeritageHits;
 use crate::rgb::RGB;
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize, Clone, Copy)]
 
 pub struct Sphere {
     pub center: Point3D,
