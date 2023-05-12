@@ -72,16 +72,16 @@ impl Screen {
                     // }
                 }
                 println!("distance: {}", sphere.distance);
-                sphere.rgb = self.calcul_pixel_color(sphere.inital_rgb, coefficient, sphere.distance * 100.0);
+                sphere.rgb = self.calcul_pixel_color(sphere.initial_rgb, coefficient, sphere.distance * 100.0);
                 write_pixel(file, &sphere.rgb);
                 // let light_ray = Ray::init_ray(lights[0].origine, sphere.intersection_point.vectorize(lights[0].origine));
                 // let coefficient = self.calcul_coefficients(light_ray, sphere.normal);
-                // sphere.rgb = self.calcul_pixel_color(sphere.inital_rgb, coefficient, sphere.distance * 100.0);
+                // sphere.rgb = self.calcul_pixel_color(sphere.initial_rgb, coefficient, sphere.distance * 100.0);
                 // write_pixel(file, &sphere.rgb);
             } else if intersection_plan != None && plan.distance > 0.0 {
                 let light_ray = Ray::init_ray(lights[0].origine, plan.intersection_point.vectorize(lights[0].origine));
                 let coefficient = self.calcul_coefficients(light_ray, plan.normal);
-                plan.rgb = self.calcul_pixel_color(plan.inital_rgb, coefficient, plan.distance);
+                plan.rgb = self.calcul_pixel_color(plan.initial_rgb, coefficient, plan.distance);
                 write_pixel(file, &plan.rgb);
             } else {
                 write_pixel(file, &RGB::init_rgb(0, 0, 0));

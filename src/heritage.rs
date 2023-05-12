@@ -5,8 +5,10 @@
 // heritage
 //
 
+use core::fmt;
 use crate::ray::Ray;
 use crate::point::Point3D;
+use std::option::Option;
 
 pub trait HeritageHits {
     fn hits(&mut self, ray: Ray) -> Option<Point3D>;

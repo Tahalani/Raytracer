@@ -23,7 +23,7 @@
             }
         }
     },
-    "sphere": [
+    "primitive": [
         {
             "center": {
                 "x": 0.5,
@@ -36,61 +36,21 @@
                 "y": 0,
                 "z": 0
             },
-            "coefficients": 0.0,
+            "normal": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
             "rgb": {
                 "r": 255,
                 "g": 255,
                 "b": 0
-            }
-        }
-    ],
-    "plan": [
-        {
-            "normal": {
-                "x": 0.0,
-                "y": 1.0,
-                "z": 0.0
             },
-            "origin":{
-                "x": 0,
-                "y": 0,
-                "z": 0
-            },
-            "intersection_point": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-            },
-            "coefficients": 0.0,
             "distance": 0.0,
-            "rgb": {
+            "initial_rgb": {
                 "r": 255,
-                "g": 0,
-                "b": 255
-            }
-        },
-        {
-            "normal": {
-                "x": 1,
-                "y": 1,
-                "z": 1
-            },
-            "origin":{
-                "x": 1,
-                "y": 1,
-                "z": 1
-            },
-            "intersection_point": {
-                "x": 1,
-                "y": 1,
-                "z": 1
-            },
-            "coefficients": 1.1,
-            "distance": 1.1,
-            "rgb": {
-                "r": 1,
-                "g": 1,
-                "b": 1
+                "g": 255,
+                "b": 0
             }
         }
     ]

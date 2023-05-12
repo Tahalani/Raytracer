@@ -23,7 +23,7 @@ pub struct Sphere {
     pub normal: Vector,
     pub rgb: RGB,
     pub distance: f64,
-    pub inital_rgb: RGB,
+    pub initial_rgb: RGB,
 }
 
 impl HeritageHits for Sphere {
@@ -45,7 +45,7 @@ impl HeritageHits for Sphere {
 impl Sphere {
     pub fn init_sphere (center: Point3D, radius: f64, intersection_point: Point3D) -> Sphere {
         Sphere { center, radius, intersection_point, rgb: RGB::init_rgb(255, 0, 255), normal: Vector::init_vector(0.0, 0.0, 0.0),
-            distance: 0.0, inital_rgb: RGB::init_rgb(255, 0, 255)}
+            distance: 0.0, initial_rgb: RGB::init_rgb(255, 0, 255)}
     }
 
     pub fn calcul_discriminant(&mut self, ray: Ray, a: &mut f64, b: &mut f64) -> f64 {
