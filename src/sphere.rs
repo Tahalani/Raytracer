@@ -42,6 +42,25 @@ impl HeritageHits for Sphere {
     }
 }
 
+impl<'de> Sphere {
+    pub fn create_sphere<A>(data: serde_json::Value) -> Result<Box<dyn HeritageHits>, A::Error>
+        where
+            A: serde::de::SeqAccess<'de>,
+    {
+        let sphere: Sphere;
+        match serde_json::from_value(data) {
+            Ok(obj) => sphere = obj,
+            Err(err) => {
+                println!("Error: {}", err);
+                return Err(serde::de::Error::custom("Error"));
+            }
+        }
+        Ok(Box::new(sphere) as Box<dyn HeritageHits>)
+
+    }
+
+}
+
 impl Sphere {
     pub fn init_sphere (center: Point3D, radius: f64, intersection_point: Point3D) -> Sphere {
         Sphere { center, radius, intersection_point, rgb: RGB::init_rgb(255, 0, 255), normal: Vector::init_vector(0.0, 0.0, 0.0),

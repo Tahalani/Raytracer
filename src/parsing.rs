@@ -24,6 +24,11 @@ pub struct Scene {
     pub primitive: Vec<Box<dyn HeritageHits>>,
 }
 
+enum Primitivetype {
+    Sphere,
+    Plan,
+}
+
 impl<'de> Deserialize<'de> for Box<dyn HeritageHits> {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
@@ -68,7 +73,6 @@ where
         
         let value = T::deserialize(serde::de::value::MapAccessDeserializer::new(&mut map))?;
 
-
         let dynamic_value = Box::new(value) as Box<dyn HeritageHits>;
         Ok(dynamic_value)
     }
@@ -87,10 +91,7 @@ impl Parsing {
         file.read_to_string(&mut contents).unwrap();
 
 
-
-
         let data: Scene = serde_json::from_str(&contents).unwrap();
-
         return Parsing {scene: data};
     }
 }
