@@ -10,6 +10,7 @@ use crate::camera;
 use crate::sphere;
 use crate::cylinder;
 use crate::cone;
+use crate::triangle;
 use crate::rgb::RGB;
 use crate::write_ppm::{write_pixel, create_file};
 use crate::plan;
@@ -58,12 +59,13 @@ impl Screen {
         return coefficients * 100.0;
     }
 
-    pub fn render(&self, ray: Ray, file: &mut File, sphere: &mut sphere::Sphere, plan: &mut plan::Plan, cylinder: &mut cylinder::Cylinder, cone: &mut cone::Cone) {
+    pub fn render(&self, ray: Ray, file: &mut File, sphere: &mut sphere::Sphere, plan: &mut plan::Plan, cylinder: &mut cylinder::Cylinder, cone: &mut cone::Cone, triangle: &mut triangle::Triangle) {
 
         let intersection_sphere: Option<Point3D> = sphere.hits(ray);
         let intersection_plan: Option<Point3D> = plan.hits(ray);
         let intersection_cylinder: Option<Point3D> = cylinder.hits(ray);
         let intersection_cone: Option<Point3D> = cone.hits(ray);
+        let intersection_triangle: Option<Point3D> = triangle.hits(ray);
 
             if intersection_sphere != None {
                 let coefficient = self.calcul_coefficients(ray, sphere.normal);
@@ -85,7 +87,7 @@ impl Screen {
             }
     }
 
-    pub fn display_screen(&self, _camera: camera::Camera, mut sphere: sphere::Sphere, mut plan: plan::Plan, mut cylinder: cylinder::Cylinder, mut cone: cone::Cone) {
+    pub fn display_screen(&self, _camera: camera::Camera, mut sphere: sphere::Sphere, mut plan: plan::Plan, mut cylinder: cylinder::Cylinder, mut cone: cone::Cone, mut triangle: triangle::Triangle) {
         let width = 1000;
         let height = 1000;
         let mut file = create_file(width + 1, height + 1);
@@ -93,7 +95,7 @@ impl Screen {
         for y in (0..=height).rev() {
             for x in 0..=width {
                 let ray = _camera.ray(x as f64 / width as f64, y as f64 / height as f64);
-                self.render(ray, &mut file, &mut sphere, &mut plan, &mut cylinder, &mut cone);
+                self.render(ray, &mut file, &mut sphere, &mut plan, &mut cylinder, &mut cone, &mut triangle);
             }
         }
     }

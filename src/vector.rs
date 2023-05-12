@@ -37,6 +37,13 @@ impl Vector {
         let lenght = (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt();
         return lenght;
     }
+    pub fn cross_product(&self, other: Vector) -> Vector {
+        Vector {
+            x: self.y * other.z - self.z * other.y,
+            y: self.z * other.x - self.x * other.z,
+            z: self.x * other.y - self.y * other.z,
+        }
+    }
 }
 
 impl Add for Vector {

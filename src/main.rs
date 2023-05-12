@@ -18,6 +18,7 @@ mod rgb;
 mod heritage;
 mod cylinder;
 mod cone;
+mod triangle;
 
 use std::process::exit;
 use std::env;
@@ -57,7 +58,13 @@ fn algo() {
     let point_intersection_cone = point::Point3D::init_point(0.0, 0.0, 0.0);
     let cone = cone::Cone::init_cone(point_bottom_cone, point_top_cone, 0.2, point_intersection_cone);
 
-    screen.display_screen(_camera, sphere, plan, cylinder, cone);
+    let point_triangle_left = point::Point3D::init_point(0.2, 0.4, 2.0);
+    let point_triangle_right = point::Point3D::init_point(0.4, 0.6, 2.0);
+    let point_triangle_top = point::Point3D::init_point(0.1, 0.8, 2.0);
+    let point_intersection = point::Point3D::init_point(0.0, 0.0, 0.0);
+    let triangle = triangle::Triangle::init_triangle(point_triangle_left, point_triangle_right, point_triangle_top, 0.2, point_intersection);
+
+    screen.display_screen(_camera, sphere, plan, cylinder, cone, triangle);
 }
 
 fn main() {
