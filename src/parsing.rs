@@ -53,7 +53,7 @@ struct HeritageHitsVisitor<T>(std::marker::PhantomData<T>);
 
 impl<'de, T> serde::de::Visitor<'de> for HeritageHitsVisitor<T>
 where
-    T: HeritageHits + Deserialize<'de>,
+    T: HeritageHits + Deserialize<'de> + 'static,
 {
     type Value = Box<dyn HeritageHits>;
 
