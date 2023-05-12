@@ -19,16 +19,9 @@ impl Vector {
     pub fn init_vector(x: f64, y: f64, z: f64) -> Vector {
         Vector { x, y, z }
     }
-    pub fn length_vector(&self) -> f64 {
-        (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
-    }
+
     pub fn dot_product(&self, other: Vector) -> f64 {
         self.x * other.x + self.y * other.y + self.z * other.z
-    }
-    pub fn reverse(&mut self) {
-        self.x = -self.x;
-        self.y = -self.y;
-        self.z = -self.z;
     }
 
     pub fn normalize(&mut self) {
@@ -36,6 +29,17 @@ impl Vector {
             self.x /= lenght;
             self.y /= lenght;
             self.z /= lenght;
+    }
+    pub fn norm(&mut self) -> f64 {
+        let lenght = (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt();
+        return lenght;
+    }
+    pub fn cross_product(&self, other: Vector) -> Vector {
+        Vector {
+            x: self.y * other.z - self.z * other.y,
+            y: self.z * other.x - self.x * other.z,
+            z: self.x * other.y - self.y * other.z,
+        }
     }
 }
 

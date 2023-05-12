@@ -7,17 +7,17 @@
 
 use serde::Deserialize;
 use crate::point::Point3D;
-// use crate::rectangle::Rectangle3D;
 use crate::camera;
 use crate::sphere;
+use crate::cylinder;
+use crate::cone;
+use crate::triangle;
 use crate::rgb::RGB;
-use crate::vector;
 use crate::write_ppm::{write_pixel, create_file};
 use crate::plan;
 use crate::heritage::HeritageHits;
 use crate::ray::Ray;
 use crate::vector::Vector;
-use crate::plan::Plan;
 use crate::light::Light;
 use std::fs::File;
 
@@ -43,7 +43,7 @@ impl Screen {
         return rgb;
     }
 
-    pub fn calcul_coefficients(&self, ray: Ray, mut normal: Vector) -> f64 {
+    pub fn calcul_coefficients(&self, ray: Ray, normal: Vector) -> f64 {
         let mut tmp_ray = ray.direction;
         tmp_ray.normalize();
         let coefficients: f64 = normal.dot_product(tmp_ray);
@@ -59,7 +59,7 @@ impl Screen {
         for light in lights {
             light_ray = Ray::init_ray(light.origine, sphere.intersection_point.vectorize(light.origine));
             coefficient += self.calcul_coefficients(light_ray, sphere.normal);
-            if (sphere.distance > sphere.calcul_distance_between_point(light_ray)) {
+            if sphere.distance > sphere.calcul_distance_between_point(light_ray) {
                 sphere.distance = sphere.calcul_distance_between_point(light_ray);
             }
             // if (coefficient > 1.0) {
@@ -83,13 +83,31 @@ impl Screen {
         write_pixel(file, &plan.rgb);
     }
 
-    pub fn render(&self, ray: Ray, file: &mut File, sphere: &mut sphere::Sphere, plan: &mut plan::Plan, lights: Vec<Light>) {
+    pub fn render_cylinder(&self, ray: Ray, file: &mut File, cylinder: &mut cylinder::Cylinder) {
+        let coefficient = self.calcul_coefficients(ray, cylinder.normal);
+        cylinder.rgb = self.calcul_pixel_color(cylinder.inital_rgb, coefficient, cylinder.distance);
+        write_pixel(file, &cylinder.rgb);
+    }
+
+    pub fn render_cone(&self, ray: Ray, file: &mut File, cone: &mut cone::Cone) {
+        let coefficient = self.calcul_coefficients(ray, cone.normal);
+        cone.rgb = self.calcul_pixel_color(cone.inital_rgb, coefficient, cone.distance);
+        write_pixel(file, &cone.rgb);
+    }
+
+    pub fn render(&self, ray: Ray, file: &mut File, sphere: &mut sphere::Sphere, plan: &mut plan::Plan, lights: Vec<Light>, cylinder: &mut cylinder::Cylinder, cone: &mut cone::Cone, triangle: &mut triangle::Triangle) {
 
         let intersection_sphere: Option<Point3D> = sphere.hits(ray);
         let intersection_plan: Option<Point3D> = plan.hits(ray);
+        let intersection_cylinder: Option<Point3D> = cylinder.hits(ray);
+        let intersection_cone: Option<Point3D> = cone.hits(ray);
 
         if intersection_sphere != None {
             self.render_sphere(sphere, file, lights);
+        } else if intersection_cylinder != None && (intersection_cylinder.unwrap() - cylinder.center_bottom).dot_product(cylinder.hauteur) < cylinder.hauteur.norm() {
+            self.render_cylinder(ray, file, cylinder);
+        } else if intersection_cone != None && (intersection_cone.unwrap() - cone.center_top).dot_product(cone.hauteur) < cone.oc.norm() && (intersection_cone.unwrap() - cone.center_bottom).dot_product(cone.hauteur) > 0.0 {
+            self.render_cone(ray, file, cone);
         } else if intersection_plan != None && plan.distance > 0.0 {
             self.render_plan(plan, file, lights);
         } else {
@@ -97,7 +115,7 @@ impl Screen {
         }
     }
 
-    pub fn display_screen(&self, _camera: camera::Camera, mut sphere: sphere::Sphere, mut plan: plan::Plan, lights: Vec<Light>) {
+    pub fn display_screen(&self, _camera: camera::Camera, mut sphere: sphere::Sphere, mut plan: plan::Plan, lights: Vec<Light>, mut cylinder: cylinder::Cylinder, mut cone: cone::Cone, mut triangle: triangle::Triangle) {
         let width = 1000;
         let height = 1000;
         let mut file = create_file(width + 1, height + 1);
@@ -105,7 +123,7 @@ impl Screen {
         for y in (0..=height).rev() {
             for x in 0..=width {
                 let ray = _camera.ray(x as f64 / width as f64, y as f64 / height as f64);
-                self.render(ray, &mut file, &mut sphere, &mut plan, lights.clone());
+                self.render(ray, &mut file, &mut sphere, &mut plan, lights.clone(), &mut cylinder, &mut cone, &mut triangle);
             }
         }
     }
