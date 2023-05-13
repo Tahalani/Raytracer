@@ -13,11 +13,12 @@ use crate::cylinder;
 use crate::cone;
 use crate::triangle;
 use crate::rgb::RGB;
+use crate::vector::Vector;
 use crate::write_ppm::{write_pixel, create_file};
 use crate::plan;
 use crate::heritage::HeritageHits;
 use crate::ray::Ray;
-use crate::vector::Vector;
+use crate::plan::Plan;
 use crate::light::Light;
 use std::fs::File;
 

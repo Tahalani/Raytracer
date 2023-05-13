@@ -48,6 +48,7 @@ fn algo() {
     let origin_cam = point::Point3D::init_point(0.5, 0.5, 0.0);
     let _camera: camera::Camera = camera::Camera::init_camera(origin_cam, _rectangle);
 
+
     let point_sphere = point::Point3D::init_point(0.3, 0.17, 2.0);
     let point_intersection = point::Point3D::init_point(0.0, 0.0, 0.0);
     let sphere = sphere::Sphere::init_sphere(point_sphere, 0.2, point_intersection);
@@ -74,7 +75,10 @@ fn algo() {
 
     let cam_light = point::Point3D::init_point(1.0, 1.0, 0.0);
     let cam_light2 = point::Point3D::init_point(-3000.0, 400.4, 100.0);
-    let lights = vec![light::Light::init_light(cam_light, rgb::RGB::init_rgb(125, 125, 125), 255.0), light::Light::init_light(cam_light2, rgb::RGB::init_rgb(125, 125, 125), 255.0)];
+    let lights = vec![
+        light::Light::init_light(cam_light, rgb::RGB::init_rgb(125, 125, 125), 255.0, vector::Vector::init_vector(0.0, 0.0, 0.0)), 
+        light::Light::init_light(cam_light2, rgb::RGB::init_rgb(125, 125, 125), 255.0, vector::Vector::init_vector(0.0, 0.0, 0.0))
+    ];
     screen.display_screen(_camera, sphere, plan, lights, cylinder, cone, triangle);
 }
 

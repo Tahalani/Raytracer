@@ -19,7 +19,6 @@ impl Vector {
     pub fn init_vector(x: f64, y: f64, z: f64) -> Vector {
         Vector { x, y, z }
     }
-
     pub fn dot_product(&self, other: Vector) -> f64 {
         self.x * other.x + self.y * other.y + self.z * other.z
     }

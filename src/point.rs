@@ -20,6 +20,17 @@ pub struct Point3D {
     pub z: f64,
 }
 
+impl Sub for Point3D {
+    type Output = Vector;
+    fn sub(self, other: Point3D) -> Vector {
+        Vector {
+            x: self.x - other.x,
+            y: self.y - other.y,
+            z: self.z - other.z,
+        }
+    }
+}
+
 impl Point3D {
     pub fn init_point(x: f64, y: f64, z: f64) -> Point3D {
         Point3D { x, y, z }

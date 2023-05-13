@@ -83,14 +83,3 @@ impl Sphere {
         return distance;
     }
 }
-
-impl Sub for Point3D {
-    type Output = Vector;
-    fn sub(self, other: Point3D) -> Vector {
-        Vector {
-            x: self.x - other.x,
-            y: self.y - other.y,
-            z: self.z - other.z,
-        }
-    }
-}
