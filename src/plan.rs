@@ -35,6 +35,9 @@ impl HeritageHits for Plan {
         }
         return Some(ray.origin + (ray.direction * discriminant));
     }
+    fn who(&self) -> String {
+        return String::from("Plan");
+    }
 }
 
 impl Plan {
@@ -48,5 +51,23 @@ impl Plan {
         let z = self.intersection_point.z - ray.origin.z;
         let distance = (x.powi(2) + y.powi(2) + z.powi(2)).sqrt();
         return distance;
+    }
+}
+
+impl<'de> Plan {
+    pub fn create_plan<M>(data: serde_json::Value) -> Result<Box<dyn HeritageHits>, M::Error>
+        where
+            M: serde::de::MapAccess<'de>,
+    {
+        let plan: Plan;
+        match serde_json::from_value(data) {
+            Ok(obj) => plan = obj,
+            Err(err) => {
+                println!("Error: {}", err);
+                return Err(serde::de::Error::custom("Error"));
+            }
+        }
+        Ok(Box::new(plan) as Box<dyn HeritageHits>)
+
     }
 }

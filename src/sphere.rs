@@ -40,12 +40,15 @@ impl HeritageHits for Sphere {
             return Some(self.intersection_point);
         }
     }
+    fn who(&self) -> String {
+        return String::from("Sphere");
+    }
 }
 
 impl<'de> Sphere {
-    pub fn create_sphere<A>(data: serde_json::Value) -> Result<Box<dyn HeritageHits>, A::Error>
+    pub fn create_sphere<M>(data: serde_json::Value) -> Result<Box<dyn HeritageHits>, M::Error>
         where
-            A: serde::de::SeqAccess<'de>,
+            M: serde::de::MapAccess<'de>,
     {
         let sphere: Sphere;
         match serde_json::from_value(data) {
@@ -58,7 +61,6 @@ impl<'de> Sphere {
         Ok(Box::new(sphere) as Box<dyn HeritageHits>)
 
     }
-
 }
 
 impl Sphere {

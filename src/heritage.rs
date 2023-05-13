@@ -12,4 +12,8 @@ use std::option::Option;
 
 pub trait HeritageHits {
     fn hits(&mut self, ray: Ray) -> Option<Point3D>;
+    fn who(&self) -> String;
+    fn mehdi(&self) -> String {
+        return String::from("Mehdi");
+    }
 }
