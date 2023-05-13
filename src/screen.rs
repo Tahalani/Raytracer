@@ -11,12 +11,11 @@ use crate::point::Point3D;
 use crate::camera;
 use crate::sphere;
 use crate::rgb::RGB;
-use crate::vector;
+use crate::vector::Vector;
 use crate::write_ppm::{write_pixel, create_file};
 use crate::plan;
 use crate::heritage::HeritageHits;
 use crate::ray::Ray;
-use crate::vector::Vector;
 use crate::plan::Plan;
 use crate::light::Light;
 use std::fs::File;
@@ -60,11 +59,38 @@ impl Screen {
 
             if intersection_sphere != None {
                 for light in lights {
-                    let light_ray = Ray::init_ray(light.origine, sphere.intersection_point.vectorize(light.origine));
-                    tmp_distance = sphere.calcul_distance_between_point(light_ray);
-                    if (tmp_distance < distance || distance == 0.0) && tmp_distance > 0.0 {
-                        distance = tmp_distance;
-                        coefficient = self.calcul_coefficients(light_ray, sphere.normal);
+                    if light.direction.x == 0.0 && light.direction.y == 0.0 && light.direction.z == 0.0 {
+                        // println!("light product: {:?}", (light.direction).dot_product(sphere.normal));
+                        let light_ray = Ray::init_ray(light.origine, sphere.intersection_point.vectorize(light.origine));
+                        tmp_distance = sphere.calcul_distance_between_point(light_ray);
+                        if (tmp_distance < distance || distance == 0.0) && tmp_distance > 0.0 {
+                            distance = tmp_distance;
+                            coefficient = self.calcul_coefficients(light_ray, sphere.normal);
+                        }
+                    } else {
+
+
+
+
+                        let light_ray = Ray::init_ray(light.origine, light.origine.vectorize(sphere.intersection_point));
+                        
+                        // println!("light_ray: {:?}", light_ray);
+                        // println!("light product: {:?}", light.direction.dot_product(light_ray.direction));
+                        if light.direction.dot_product(light_ray.direction) > 0.0 {
+                            tmp_distance = sphere.calcul_distance_between_point(light_ray);
+                            if (tmp_distance < distance || distance == 0.0) && tmp_distance > 0.0 {
+                                distance = tmp_distance;
+                                coefficient = 100.0;
+                                // coefficient = self.calcul_coefficients(light_ray, sphere.normal);
+                                // println!("je rentre dans la lumiere {:?} {:?}", distance , coefficient);
+                            }
+                        } else {
+                            write_pixel(file, &RGB::init_rgb(0, 0, 0));
+                            return;
+                        }
+
+
+
                     }
                 }
                 sphere.rgb = self.calcul_pixel_color(sphere.inital_rgb, coefficient, distance * 100.0);

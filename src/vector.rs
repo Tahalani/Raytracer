@@ -22,7 +22,7 @@ impl Vector {
     pub fn length_vector(&self) -> f64 {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
     }
-    pub fn dot_product(&self, other: Vector) -> f64 {
+    pub fn  dot_product(&self, other: Vector) -> f64 {
         self.x * other.x + self.y * other.y + self.z * other.z
     }
     pub fn reverse(&mut self) {
