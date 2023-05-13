@@ -14,12 +14,10 @@ use serde::Deserialize;
 use std::fs::File;
 use std::io::prelude::*;
 
-pub struct Primitive(Box<dyn HeritageHits>);
-
 #[derive(Deserialize)]
 pub struct Scene {
     pub camera: Camera,
-    pub primitive: Vec<Primitive>,
+    pub primitive: Vec<Box<dyn HeritageHits>>,
 }
 
 #[derive(Deserialize)]
@@ -28,7 +26,7 @@ enum Primitivetype {
     Plan,
 }
 
-impl<'de> serde::Deserialize<'de> for Primitive {
+impl<'de> serde::Deserialize<'de> for Box<dyn HeritageHits> {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
@@ -36,7 +34,7 @@ impl<'de> serde::Deserialize<'de> for Primitive {
         struct PrimitiveVisitor;
 
         impl<'de> serde::de::Visitor<'de> for PrimitiveVisitor {
-            type Value = Primitive;
+            type Value = Box<dyn HeritageHits>;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
                 formatter.write_str("A boc of dyn HeritageHits")
@@ -56,7 +54,7 @@ impl<'de> serde::Deserialize<'de> for Primitive {
                         _ => return Err(serde::de::Error::custom("Error")),
                     };
                 }
-                Ok(Primitive(primitive.unwrap()))
+                Ok(primitive.unwrap())
             }
         }
         deserializer.deserialize_map(PrimitiveVisitor)
@@ -78,7 +76,7 @@ impl Parsing {
 
 
         for i in data.primitive.iter() {
-            println!("{}", i.0.mehdi());
+            println!("{}", i.who());
         }
         
 
