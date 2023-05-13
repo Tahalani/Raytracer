@@ -83,15 +83,27 @@ impl Screen {
         write_pixel(file, &plan.rgb);
     }
 
+    pub fn calcul_rgb(&self, coefficients: f64, mut distance: f64, r1: u64, g1: u64, b1: u64) -> RGB {
+        distance *= 100.0;
+        let mut rgb: RGB = RGB::init_rgb(0, 0, 0);
+            rgb.r = (((((coefficients as u64 * r1) / 100) + 1) as f64 / (distance as f64 / 250.0)) + 1.0) as u64;
+            rgb.g = (((((coefficients as u64 * g1) / 100) + 1) as f64 / (distance as f64 / 250.0)) + 1.0) as u64;
+            rgb.b = (((((coefficients as u64 * b1) / 100) + 1) as f64 / (distance as f64 / 250.0)) + 1.0) as u64;
+            rgb.r = rgb.r.clamp(0, 255);
+            rgb.g = rgb.g.clamp(0, 255);
+            rgb.b = rgb.b.clamp(0, 255);
+        return rgb;
+    }
+
     pub fn render_cylinder(&self, ray: Ray, file: &mut File, cylinder: &mut cylinder::Cylinder) {
         let coefficient = self.calcul_coefficients(ray, cylinder.normal);
-        cylinder.rgb = self.calcul_pixel_color(cylinder.inital_rgb, coefficient, cylinder.distance);
+        cylinder.rgb = self.calcul_rgb(coefficient, cylinder.distance, cylinder.inital_rgb.r, cylinder.inital_rgb.g, cylinder.inital_rgb.b);
         write_pixel(file, &cylinder.rgb);
     }
 
     pub fn render_cone(&self, ray: Ray, file: &mut File, cone: &mut cone::Cone) {
         let coefficient = self.calcul_coefficients(ray, cone.normal);
-        cone.rgb = self.calcul_pixel_color(cone.inital_rgb, coefficient, cone.distance);
+        cone.rgb = self.calcul_rgb(coefficient, cone.distance, cone.inital_rgb.r, cone.inital_rgb.g, cone.inital_rgb.b);
         write_pixel(file, &cone.rgb);
     }
 
