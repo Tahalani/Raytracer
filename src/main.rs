@@ -16,6 +16,9 @@ mod write_ppm;
 mod plan;
 mod rgb;
 mod heritage;
+mod cylinder;
+mod cone;
+mod triangle;
 mod light;
 mod parsing;
 
@@ -45,21 +48,38 @@ fn algo() {
     let origin_cam = point::Point3D::init_point(0.5, 0.5, 0.0);
     let _camera: camera::Camera = camera::Camera::init_camera(origin_cam, _rectangle);
 
-    let point_sphere = point::Point3D::init_point(0.5, 0.5, 2.0);
-    let point_intersection: point::Point3D = point::Point3D::init_point(0.0, 0.0, 0.0);
+
+    let point_sphere = point::Point3D::init_point(0.3, 0.17, 2.0);
+    let point_intersection = point::Point3D::init_point(0.0, 0.0, 0.0);
     let sphere = sphere::Sphere::init_sphere(point_sphere, 0.2, point_intersection);
 
     let point_plan = point::Point3D::init_point(0.0, 0.0, 0.0);
     let normal_plan = vector::Vector::init_vector(0.0, 1.0, 0.0);
     let plan = plan::Plan::init_plan(normal_plan, point_plan);
 
-    let cam_light = point::Point3D::init_point(1.0, 1.0, 3.0);
-    let cam_light2 = point::Point3D::init_point(0.0, 0.0, 0.0);
+    let point_bottom_cylinder = point::Point3D::init_point(0.1, 0.7, 2.0);
+    let point_top_cylinder = point::Point3D::init_point(0.3, 0.9, 2.0);
+    let point_intersection_cylinder = point::Point3D::init_point(0.0, 0.0, 0.0);
+    let cylinder = cylinder::Cylinder::init_cylinder(point_bottom_cylinder, point_top_cylinder, 0.2, point_intersection_cylinder);
+
+    let point_bottom_cone = point::Point3D::init_point(0.9, 0.1, 1.4);
+    let point_top_cone = point::Point3D::init_point(0.4, 0.2, 1.4);
+    let point_intersection_cone = point::Point3D::init_point(0.0, 0.0, 0.0);
+    let cone = cone::Cone::init_cone(point_bottom_cone, point_top_cone, 0.2, point_intersection_cone);
+
+    let point_triangle_left = point::Point3D::init_point(0.2, 0.4, 2.0);
+    let point_triangle_right = point::Point3D::init_point(0.4, 0.6, 2.0);
+    let point_triangle_top = point::Point3D::init_point(0.1, 0.8, 2.0);
+    let point_intersection = point::Point3D::init_point(0.0, 0.0, 0.0);
+    let triangle = triangle::Triangle::init_triangle(point_triangle_left, point_triangle_right, point_triangle_top, 0.2, point_intersection);
+
+    let cam_light = point::Point3D::init_point(1.0, 1.0, 0.0);
+    let cam_light2 = point::Point3D::init_point(-3000.0, 400.4, 100.0);
     let lights = vec![
-        light::Light::init_light(cam_light, rgb::RGB::init_rgb(125, 125, 125), 255.0, vector::Vector::init_vector(0.0, 0.0, 0.0)),
+        light::Light::init_light(cam_light, rgb::RGB::init_rgb(125, 125, 125), 255.0, vector::Vector::init_vector(0.0, 0.0, 0.0)), 
         light::Light::init_light(cam_light2, rgb::RGB::init_rgb(125, 125, 125), 255.0, vector::Vector::init_vector(0.0, 0.0, 0.0))
     ];
-    screen.display_screen(_camera, sphere, plan, lights);
+    screen.display_screen(_camera, sphere, plan, lights, cylinder, cone, triangle);
 }
 
 fn main() {
