@@ -53,11 +53,11 @@ fn algo() {
     let normal_plan = vector::Vector::init_vector(0.0, 1.0, 0.0);
     let plan = plan::Plan::init_plan(normal_plan, point_plan);
 
-    // let cam_light = point::Point3D::init_point(5.0, 0.5, 0.0);
-    let cam_light2 = point::Point3D::init_point(0.5, 0.5, 0.0);
+    let cam_light = point::Point3D::init_point(1.0, 1.0, 3.0);
+    let cam_light2 = point::Point3D::init_point(0.0, 0.0, 0.0);
     let lights = vec![
-        // light::Light::init_light(cam_light, rgb::RGB::init_rgb(125, 125, 125), 255.0, vector::Vector::init_vector(0.0, 0.0, 0.0)),
-        light::Light::init_light(cam_light2, rgb::RGB::init_rgb(125, 125, 125), 255.0, vector::Vector::init_vector(-4.0, 10.0, 0.5))
+        light::Light::init_light(cam_light, rgb::RGB::init_rgb(125, 125, 125), 255.0, vector::Vector::init_vector(0.0, 0.0, 0.0)),
+        light::Light::init_light(cam_light2, rgb::RGB::init_rgb(125, 125, 125), 255.0, vector::Vector::init_vector(0.0, 0.0, 0.0))
     ];
     screen.display_screen(_camera, sphere, plan, lights);
 }
