@@ -54,33 +54,48 @@ impl Screen {
     pub fn render_sphere(&self, sphere: &mut sphere::Sphere, file: &mut File, lights: Vec<Light>) {
 
         let mut coefficient = 0.0;
-        let mut light_ray = Ray::init_ray(lights[1].origine, sphere.intersection_point.vectorize(lights[1].origine));
+        let mut distance = 1000000.0;
+        let mut tmp_distance;
 
-        coefficient += self.calcul_coefficients(light_ray, sphere.normal);
         for light in lights {
-            light_ray = Ray::init_ray(light.origine, sphere.intersection_point.vectorize(light.origine));
-            coefficient += self.calcul_coefficients(light_ray, sphere.normal);
-            if sphere.distance > sphere.calcul_distance_between_point(light_ray) {
-                sphere.distance = sphere.calcul_distance_between_point(light_ray);
+            if light.direction.x == 0.0 && light.direction.y == 0.0 && light.direction.z == 0.0 {
+                let light_ray = Ray::init_ray(light.origine, sphere.intersection_point.vectorize(light.origine));
+                tmp_distance = sphere.calcul_distance_between_point(light_ray);
+                if (tmp_distance < distance || distance == 0.0) && tmp_distance > 0.0 {
+                    distance = tmp_distance;
+                }
+                if self.calcul_coefficients(light_ray, sphere.normal) > coefficient {
+                    coefficient = self.calcul_coefficients(light_ray, sphere.normal);
+                }
+            } else {
+                let light_ray = Ray::init_ray(light.origine, light.origine.vectorize(sphere.intersection_point));
+                if light.direction.dot_product(light_ray.direction) > 0.0 {
+                    tmp_distance = sphere.calcul_distance_between_point(light_ray);
+                    if tmp_distance < distance && tmp_distance > 0.0 {
+                        distance = tmp_distance;
+                        coefficient = 80.0;
+                    }
+                } else {
+                    write_pixel(file, &RGB::init_rgb(0, 0, 0));
+                    return;
+                }
             }
-            // if (coefficient > 1.0) {
-            //     coefficient = 1.0;
-            // }
-            // if self.calcul_coefficients(light_ray, sphere.normal) > coefficient {
-            // }
         }
-        sphere.rgb = self.calcul_pixel_color(sphere.inital_rgb, coefficient, sphere.distance * 100.0);
+        sphere.rgb = self.calcul_pixel_color(sphere.inital_rgb, coefficient, distance * 100.0);
         write_pixel(file, &sphere.rgb);
-        // let light_ray = Ray::init_ray(lights[0].origine, sphere.intersection_point.vectorize(lights[0].origine));
-        // let coefficient = self.calcul_coefficients(light_ray, sphere.normal);
-        // sphere.rgb = self.calcul_pixel_color(sphere.inital_rgb, coefficient, sphere.distance * 100.0);
-        // write_pixel(file, &sphere.rgb);
     }
 
     pub fn render_plan(&self, plan: &mut plan::Plan, file: &mut File, lights: Vec<Light>) {
-        let light_ray = Ray::init_ray(lights[0].origine, plan.intersection_point.vectorize(lights[0].origine));
-        let coefficient = self.calcul_coefficients(light_ray, plan.normal);
-        plan.rgb = self.calcul_pixel_color(plan.inital_rgb, coefficient, plan.distance);
+        let mut coefficient = 0.0;
+        let mut distance = 0.0;
+        for light in lights {
+            let light_ray = Ray::init_ray(light.origine, plan.intersection_point.vectorize(light.origine));
+            if self.calcul_coefficients(light_ray, plan.normal) > coefficient {
+                coefficient = self.calcul_coefficients(light_ray, plan.normal);
+                distance = plan.distance;
+            }
+        }
+        plan.rgb = self.calcul_pixel_color(plan.inital_rgb, coefficient, distance);
         write_pixel(file, &plan.rgb);
     }
 

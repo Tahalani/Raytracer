@@ -74,7 +74,7 @@ fn algo() {
     let triangle = triangle::Triangle::init_triangle(point_triangle_left, point_triangle_right, point_triangle_top, 0.2, point_intersection);
 
     let cam_light = point::Point3D::init_point(1.0, 1.0, 0.0);
-    let cam_light2 = point::Point3D::init_point(-3000.0, 400.4, 100.0);
+    let cam_light2 = point::Point3D::init_point(0.1, 0.1, 0.0);
     let lights = vec![
         light::Light::init_light(cam_light, rgb::RGB::init_rgb(125, 125, 125), 255.0, vector::Vector::init_vector(0.0, 0.0, 0.0)), 
         light::Light::init_light(cam_light2, rgb::RGB::init_rgb(125, 125, 125), 255.0, vector::Vector::init_vector(0.0, 0.0, 0.0))
