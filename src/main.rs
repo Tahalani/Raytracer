@@ -29,22 +29,14 @@ fn print_help(binary: &String) {
     println!("\tSCENE_FILE: scene configuration");
 }
 
-fn algo() {
-
-    let mut parsing = parsing::Parsing::init_parsing("test.json".to_string());
-
-    // let screen = screen::Screen::init_screen();
-
-    parsing.render.display_screen(parsing.camera, parsing.light, & mut parsing.primitive);
-}
-
 fn main() {
     let args: Vec<String> = env::args().collect();
     if  args.len() == 2 && args[1].eq("--help") {
         print_help(&args[0]);
         exit(0);
     } else {
-        algo();
+        let mut parsing = parsing::Parsing::init_parsing(args[1].to_string());
+        parsing.render.display_screen(parsing.camera, parsing.light, & mut parsing.primitive);
     }
 
 }
