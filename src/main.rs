@@ -18,7 +18,6 @@ mod rgb;
 mod heritage;
 mod cylinder;
 mod cone;
-mod triangle;
 mod light;
 mod parsing;
 
@@ -67,19 +66,13 @@ fn algo() {
     let point_intersection_cone = point::Point3D::init_point(0.0, 0.0, 0.0);
     let cone = cone::Cone::init_cone(point_bottom_cone, point_top_cone, 0.2, point_intersection_cone);
 
-    let point_triangle_left = point::Point3D::init_point(0.2, 0.4, 2.0);
-    let point_triangle_right = point::Point3D::init_point(0.4, 0.6, 2.0);
-    let point_triangle_top = point::Point3D::init_point(0.1, 0.8, 2.0);
-    let point_intersection = point::Point3D::init_point(0.0, 0.0, 0.0);
-    let triangle = triangle::Triangle::init_triangle(point_triangle_left, point_triangle_right, point_triangle_top, 0.2, point_intersection);
-
     let cam_light = point::Point3D::init_point(1.0, 1.0, 0.0);
     let cam_light2 = point::Point3D::init_point(0.1, 0.1, 0.0);
     let lights = vec![
-        light::Light::init_light(cam_light, rgb::RGB::init_rgb(125, 125, 125), 255.0, vector::Vector::init_vector(0.0, 0.0, 0.0)), 
+        light::Light::init_light(cam_light, rgb::RGB::init_rgb(125, 125, 125), 255.0, vector::Vector::init_vector(0.0, 0.0, 0.0)),
         light::Light::init_light(cam_light2, rgb::RGB::init_rgb(125, 125, 125), 255.0, vector::Vector::init_vector(0.0, 0.0, 0.0))
     ];
-    screen.display_screen(_camera, sphere, plan, lights, cylinder, cone, triangle);
+    screen.display_screen(_camera, sphere, plan, lights, cylinder, cone);
 }
 
 fn main() {

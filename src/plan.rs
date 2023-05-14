@@ -21,7 +21,7 @@ pub struct Plan {
     pub intersection_point: Point3D,
     pub distance: f64,
     pub rgb: RGB,
-    pub inital_rgb: RGB,
+    pub initial_rgb: RGB,
 }
 
 impl HeritageHits for Plan {
@@ -35,12 +35,15 @@ impl HeritageHits for Plan {
         }
         return Some(ray.origin + (ray.direction * discriminant));
     }
+    fn who(&self) -> String {
+        return String::from("Plan");
+    }
 }
 
 impl Plan {
     pub fn init_plan(normal : Vector, origin : Point3D) -> Plan {
         Plan { normal, origin, intersection_point: Point3D::init_point(0.0, 0.0, 0.0),
-        distance: 0.0, rgb: RGB::init_rgb(255, 255, 255), inital_rgb: RGB::init_rgb(255, 255, 255)}
+        distance: 0.0, rgb: RGB::init_rgb(255, 255, 255), initial_rgb: RGB::init_rgb(255, 255, 255)}
     }
     pub fn calcul_distance_between_point(&mut self, ray: Ray) -> f64 {
         let x = self.intersection_point.x - ray.origin.x;
@@ -48,5 +51,23 @@ impl Plan {
         let z = self.intersection_point.z - ray.origin.z;
         let distance = (x.powi(2) + y.powi(2) + z.powi(2)).sqrt();
         return distance;
+    }
+}
+
+impl<'de> Plan {
+    pub fn create_plan<M>(data: serde_json::Value) -> Result<Box<dyn HeritageHits>, M::Error>
+        where
+            M: serde::de::MapAccess<'de>,
+    {
+        let plan: Plan;
+        match serde_json::from_value(data) {
+            Ok(obj) => plan = obj,
+            Err(err) => {
+                println!("Error: {}", err);
+                return Err(serde::de::Error::custom("Error"));
+            }
+        }
+        Ok(Box::new(plan) as Box<dyn HeritageHits>)
+
     }
 }

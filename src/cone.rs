@@ -10,8 +10,9 @@ use crate::ray::Ray;
 use crate::vector::Vector;
 use crate::heritage::HeritageHits;
 use crate::rgb::RGB;
+use serde::Deserialize;
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 
 pub struct Cone {
     pub center_top: Point3D,
@@ -21,7 +22,7 @@ pub struct Cone {
     pub normal: Vector,
     pub rgb: RGB,
     pub distance: f64,
-    pub inital_rgb: RGB,
+    pub initial_rgb: RGB,
     pub hauteur: Vector,
     pub oc: Vector,
 }
@@ -40,12 +41,33 @@ impl HeritageHits for Cone {
             return Some(self.intersection_point);
         }
     }
+    fn who(&self) -> String {
+        return String::from("Cone");
+    }
+}
+
+impl<'de> Cone {
+    pub fn create_cone<M>(data: serde_json::Value) -> Result<Box<dyn HeritageHits>, M::Error>
+        where
+            M: serde::de::MapAccess<'de>,
+    {
+        let sphere: Cone;
+        match serde_json::from_value(data) {
+            Ok(obj) => sphere = obj,
+            Err(err) => {
+                println!("Error: {}", err);
+                return Err(serde::de::Error::custom("Error"));
+            }
+        }
+        Ok(Box::new(sphere) as Box<dyn HeritageHits>)
+
+    }
 }
 
 impl Cone {
     pub fn init_cone(center_top: Point3D, center_bottom: Point3D, radius: f64, intersection_point: Point3D) -> Cone {
         Cone { center_top, center_bottom, radius, intersection_point, rgb: RGB::init_rgb(255, 0, 255), normal: Vector::init_vector(0.0, 0.0, 0.0),
-            distance: 0.0, inital_rgb: RGB::init_rgb(255, 0, 255), hauteur: Vector::init_vector(0.0, 0.0, 0.0), oc: Vector::init_vector(0.0, 0.0, 0.0)}
+            distance: 0.0, initial_rgb: RGB::init_rgb(255, 0, 255), hauteur: Vector::init_vector(0.0, 0.0, 0.0), oc: Vector::init_vector(0.0, 0.0, 0.0)}
     }
     pub fn calcul_discriminant(&mut self, ray: Ray, a: &mut f64, b: &mut f64) -> f64 {
         let oc = ray.origin - self.center_bottom;

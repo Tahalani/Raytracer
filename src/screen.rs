@@ -11,14 +11,12 @@ use crate::camera;
 use crate::sphere;
 use crate::cylinder;
 use crate::cone;
-use crate::triangle;
 use crate::rgb::RGB;
 use crate::vector::Vector;
 use crate::write_ppm::{write_pixel, create_file};
 use crate::plan;
 use crate::heritage::HeritageHits;
 use crate::ray::Ray;
-use crate::plan::Plan;
 use crate::light::Light;
 use std::fs::File;
 
@@ -93,7 +91,7 @@ impl Screen {
                 }
             }
         }
-        sphere.rgb = self.calcul_pixel_color(sphere.inital_rgb, coefficient, distance * 100.0);
+        sphere.rgb = self.calcul_pixel_color(sphere.initial_rgb, coefficient, distance * 100.0);
         write_pixel(file, &sphere.rgb);
     }
 
@@ -107,24 +105,24 @@ impl Screen {
                 distance = plan.distance;
             }
         }
-        plan.rgb = self.calcul_pixel_color(plan.inital_rgb, coefficient, distance);
+        plan.rgb = self.calcul_pixel_color(plan.initial_rgb, coefficient, distance);
         write_pixel(file, &plan.rgb);
     }
 
 
     pub fn render_cylinder(&self, ray: Ray, file: &mut File, cylinder: &mut cylinder::Cylinder) {
         let coefficient = self.calcul_coefficients(ray, cylinder.normal);
-        cylinder.rgb = self.calcul_rgb(coefficient, cylinder.distance, cylinder.inital_rgb.r, cylinder.inital_rgb.g, cylinder.inital_rgb.b);
+        cylinder.rgb = self.calcul_rgb(coefficient, cylinder.distance, cylinder.initial_rgb.r, cylinder.initial_rgb.g, cylinder.initial_rgb.b);
         write_pixel(file, &cylinder.rgb);
     }
 
     pub fn render_cone(&self, ray: Ray, file: &mut File, cone: &mut cone::Cone) {
         let coefficient = self.calcul_coefficients(ray, cone.normal);
-        cone.rgb = self.calcul_rgb(coefficient, cone.distance, cone.inital_rgb.r, cone.inital_rgb.g, cone.inital_rgb.b);
+        cone.rgb = self.calcul_rgb(coefficient, cone.distance, cone.initial_rgb.r, cone.initial_rgb.g, cone.initial_rgb.b);
         write_pixel(file, &cone.rgb);
     }
 
-    pub fn render(&self, ray: Ray, file: &mut File, sphere: &mut sphere::Sphere, plan: &mut plan::Plan, lights: Vec<Light>, cylinder: &mut cylinder::Cylinder, cone: &mut cone::Cone, triangle: &mut triangle::Triangle) {
+    pub fn render(&self, ray: Ray, file: &mut File, sphere: &mut sphere::Sphere, plan: &mut plan::Plan, lights: Vec<Light>, cylinder: &mut cylinder::Cylinder, cone: &mut cone::Cone) {
 
         let intersection_sphere: Option<Point3D> = sphere.hits(ray);
         let intersection_plan: Option<Point3D> = plan.hits(ray);
@@ -144,7 +142,7 @@ impl Screen {
         }
     }
 
-    pub fn display_screen(&self, _camera: camera::Camera, mut sphere: sphere::Sphere, mut plan: plan::Plan, lights: Vec<Light>, mut cylinder: cylinder::Cylinder, mut cone: cone::Cone, mut triangle: triangle::Triangle) {
+    pub fn display_screen(&self, _camera: camera::Camera, mut sphere: sphere::Sphere, mut plan: plan::Plan, lights: Vec<Light>, mut cylinder: cylinder::Cylinder, mut cone: cone::Cone) {
         let width = 1000;
         let height = 1000;
         let mut file = create_file(width + 1, height + 1);
@@ -152,7 +150,7 @@ impl Screen {
         for y in (0..=height).rev() {
             for x in 0..=width {
                 let ray = _camera.ray(x as f64 / width as f64, y as f64 / height as f64);
-                self.render(ray, &mut file, &mut sphere, &mut plan, lights.clone(), &mut cylinder, &mut cone, &mut triangle);
+                self.render(ray, &mut file, &mut sphere, &mut plan, lights.clone(), &mut cylinder, &mut cone);
             }
         }
     }
