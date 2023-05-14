@@ -5,12 +5,14 @@
 // ray
 //
 
+use serde::Deserialize;
+
 use crate::vector::Vector;
 use crate::point::Point3D;
 use core::ops::Mul;
 use core::ops::Add;
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Deserialize)]
 
 pub struct Ray {
     pub origin: Point3D,

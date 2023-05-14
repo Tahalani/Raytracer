@@ -10,7 +10,11 @@ use crate::ray::Ray;
 use crate::vector::Vector;
 use crate::heritage::HeritageHits;
 use crate::rgb::RGB;
+use std::fs::File;
+use crate::light::Light;
+use crate::screen::Screen;
 use serde::Deserialize;
+use crate::write_ppm::write_pixel;
 
 #[derive(Debug, Deserialize)]
 
@@ -44,6 +48,11 @@ impl HeritageHits for Cone {
     fn who(&self) -> String {
         return String::from("Cone");
     }
+    fn render_obj(&mut self, file: &mut File, _lights: &Vec<Light>, render: &Screen) {
+        let coefficient = render.calcul_coefficients(render.ray.unwrap(), self.normal);
+        self.rgb = render.calcul_rgb(coefficient, self.distance, self.initial_rgb.r, self.initial_rgb.g, self.initial_rgb.b);
+        write_pixel(file, &self.rgb);
+    }
 }
 
 impl<'de> Cone {
@@ -65,7 +74,7 @@ impl<'de> Cone {
 }
 
 impl Cone {
-    pub fn init_cone(center_top: Point3D, center_bottom: Point3D, radius: f64, intersection_point: Point3D) -> Cone {
+    pub fn _init_cone(center_top: Point3D, center_bottom: Point3D, radius: f64, intersection_point: Point3D) -> Cone {
         Cone { center_top, center_bottom, radius, intersection_point, rgb: RGB::init_rgb(255, 0, 255), normal: Vector::init_vector(0.0, 0.0, 0.0),
             distance: 0.0, initial_rgb: RGB::init_rgb(255, 0, 255), hauteur: Vector::init_vector(0.0, 0.0, 0.0), oc: Vector::init_vector(0.0, 0.0, 0.0)}
     }

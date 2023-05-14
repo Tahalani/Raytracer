@@ -10,14 +10,18 @@ use crate::heritage::HeritageHits;
 use crate::plan::Plan;
 use crate::cone::Cone;
 use crate::cylinder::Cylinder;
+use crate::screen::Screen;
 use crate::sphere::Sphere;
+use crate::light::Light;
 use serde::Deserialize;
 use std::fs::File;
 use std::io::prelude::*;
 
 #[derive(Deserialize)]
 pub struct Scene {
+    pub render: Screen,
     pub camera: Camera,
+    pub light: Vec<Light>,
     pub primitive: Vec<Box<dyn HeritageHits>>,
 }
 
@@ -51,12 +55,11 @@ impl<'de> serde::Deserialize<'de> for Box<dyn HeritageHits> {
 
                 while let Some((typ, data)) = map.next_entry::<Primitivetype, serde_json::Value>()?
                 {
-                    let primitive = match typ {
+                    let _primitive = match typ {
                         Primitivetype::Sphere => primitive =  Some(Sphere::create_sphere::<M>(data)?),
                         Primitivetype::Plan => primitive = Some(Plan::create_plan::<M>(data)?),
                         Primitivetype::Cone => primitive = Some(Cone::create_cone::<M>(data)?),
                         Primitivetype::Cylinder => primitive = Some(Cylinder::create_cylinder::<M>(data)?),
-                        _ => return Err(serde::de::Error::custom("Error")),
                     };
                 }
                 Ok(primitive.unwrap())
@@ -72,18 +75,17 @@ pub struct Parsing {
 }
 
 impl Parsing {
-    pub fn init_parsing(name: String) -> Parsing {
+    pub fn init_parsing(name: String) -> Scene {
         let mut file = File::open(name).unwrap();
         let mut contents = String::new();
         file.read_to_string(&mut contents).unwrap();
 
-        let mut data: Scene = serde_json::from_str(&contents).unwrap();
+        let data: Scene = serde_json::from_str(&contents).unwrap();
 
 
         for i in data.primitive.iter() {
             println!("{}", i.who());
         }
-
-        return Parsing { scene: data };
-    }
+        return data;
+    }   
 }

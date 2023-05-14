@@ -10,7 +10,11 @@ use crate::ray::Ray;
 use crate::vector::Vector;
 use crate::heritage::HeritageHits;
 use crate::rgb::RGB;
+use std::fs::File;
+use crate::light::Light;
+use crate::screen::Screen;
 use serde::Deserialize;
+use crate::write_ppm::write_pixel;
 
 #[derive(Debug, Deserialize)]
 
@@ -42,6 +46,11 @@ impl HeritageHits for Cylinder {
     }
     fn who(&self) -> String {
         return String::from("Cylinder");
+    }
+    fn render_obj(&mut self, file: &mut File, _lights: &Vec<Light>, render: &Screen) {
+        let coefficient = render.calcul_coefficients(render.ray.unwrap(), self.normal);
+        self.rgb = render.calcul_rgb(coefficient, self.distance, self.initial_rgb.r, self.initial_rgb.g, self.initial_rgb.b);
+        write_pixel(file, &self.rgb);
     }
 }
 
